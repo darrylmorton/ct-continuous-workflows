@@ -1,0 +1,32 @@
+name: Setup
+description: Setup
+
+inputs:
+  working-directory:
+    description: Working directory
+    required: true
+    default: .
+  nodejs-version:
+    description: Node.js version
+    required: true
+    default: lts/*
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install Node.js
+      uses: ./.github/actions/nodejs/install
+      with:
+        working-directory: ${{ inputs.working-directory }}
+        nodejs-version: ${{ inputs.nodejs-version }}
+
+    - name: Install node.js dependencies
+      uses: ./.github/actions/nodejs/install-dependencies
+      with:
+        working-directory: ${{ inputs.working-directory }}
+
+    - name: Lint
+      uses: ./.github/actions/nodejs/
+      with:
+        working-directory: ${{ inputs.working-directory }}
