@@ -1,0 +1,27 @@
+name: Unit Tests
+description: Unit Tests
+
+inputs:
+  working-directory:
+    description: Working directory
+    required: true
+    default: .
+  nodejs-version:
+    description: Node.js version
+    required: true
+    default: lts/*
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup
+      uses: ./.github/actions/nodejs/setup
+      with:
+        working-directory: ${{ inputs.working-directory }}
+        nodejs-version: ${{ inputs.nodejs-version }}
+
+    - name: Run Unit Tests
+      working-directory: ${{ inputs.working-directory }}
+      shell: sh
+      run: npm run test:unit-coverage

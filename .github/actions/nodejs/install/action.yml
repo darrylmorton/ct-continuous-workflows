@@ -1,0 +1,21 @@
+name: Install
+description: Install
+
+inputs:
+  working-directory:
+    description: Working directory
+    required: true
+  nodejs-version:
+    description: Node.js version
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+        node-version: ${{ inputs.nodejs-version }}
+        cache: npm
+        check-latest: false

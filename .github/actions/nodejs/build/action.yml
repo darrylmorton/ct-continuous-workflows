@@ -1,0 +1,30 @@
+name: Build
+description: Build with Cache
+
+inputs:
+  working-directory:
+    description: Working directory
+    required: true
+    default: .
+  nodejs-version:
+    description: Node.js version
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Cache build output
+      uses: actions/cache@v4
+      id: build-cache
+      with:
+        path: ${{ inputs.working-directory }}/dist
+        # NOTE github.sha is a reference to the commit that triggered the workflow.
+        # The build cache is only utilised when the workflow is being re-run on the same revision
+        key: builds-${{ runner.os }}-${{ github.sha }}
+
+    - name: Build
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      working-directory: ${{ inputs.working-directory }}
+      shell: sh
+      run: npm run build
