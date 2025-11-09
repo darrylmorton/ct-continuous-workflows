@@ -1,4 +1,4 @@
-name: Lint and Unit Tests
+name: Node.js - Lint and Unit Tests
 
 on:
   workflow_dispatch:
