@@ -27,6 +27,6 @@ runs:
         working-directory: ${{ inputs.working-directory }}
 
     - name: Lint
-      uses: ./.github/actions/nodejs/
+      uses: ./.github/actions/nodejs/lint
       with:
         working-directory: ${{ inputs.working-directory }}
