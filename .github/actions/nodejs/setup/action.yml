@@ -4,29 +4,20 @@ description: Setup
 inputs:
   working-directory:
     description: Working directory
-    required: true
+    required: false
     default: .
   nodejs-version:
     description: Node.js version
-    required: true
+    required: false
     default: lts/*
 
 runs:
   using: composite
 
   steps:
-    - name: Install Node.js
-      uses: ./.github/actions/nodejs/install
+    - uses: actions/setup-node@v4
       with:
-        working-directory: ${{ inputs.working-directory }}
-        nodejs-version: ${{ inputs.nodejs-version }}
-
-    - name: Install node.js dependencies
-      uses: ./.github/actions/nodejs/install-dependencies
-      with:
-        working-directory: ${{ inputs.working-directory }}
-
-    - name: Lint
-      uses: ./.github/actions/nodejs/lint
-      with:
-        working-directory: ${{ inputs.working-directory }}
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+        node-version: ${{ inputs.nodejs-version }}
+        cache: npm
+        check-latest: false
