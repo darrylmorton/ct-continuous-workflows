@@ -1,0 +1,26 @@
+name: Node.js - Lint and Integration Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      working-directory:
+        description: Working directory
+        required: true
+        default: .
+      nodejs-version:
+        description: Node.js version
+        required: true
+        default: lts/*
+
+jobs:
+  unit-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: ./.github/actions/nodejs/lint
+        with:
+          nodejs-version: 22.x
+
+      - name: Run Integration Tests
+        run: npm run test:integration-coverage
