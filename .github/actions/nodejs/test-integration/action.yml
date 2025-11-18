@@ -4,23 +4,13 @@ description: Integration Tests
 inputs:
   working-directory:
     description: Working directory
-    required: true
+    required: false
     default: .
-  nodejs-version:
-    description: Node.js version
-    required: true
-    default: lts/*
 
 runs:
   using: composite
 
   steps:
-    - name: Setup
-      uses: ./.github/actions/nodejs/setup
-      with:
-        working-directory: ${{ inputs.working-directory }}
-        nodejs-version: ${{ inputs.nodejs-version }}
-
     - name: Setup Dependencies
       shell: sh
       run: docker compose up -d
