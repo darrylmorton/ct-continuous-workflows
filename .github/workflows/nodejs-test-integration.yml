@@ -71,7 +71,7 @@ jobs:
         with:
           time: ${{ inputs.sleep-time }}
 
-      - if: ${{ inputs.db-migrate-flag == 'true' }}
+      - if: ${{ inputs.db-migrate-flag == true }}
         name: Initialise DB
         run: npm run test:migrate
 
