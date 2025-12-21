@@ -1,0 +1,58 @@
+name: Node.js - Build, Lint, Integration Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      working-directory:
+        description: Working directory
+        required: true
+        default: .
+      nodejs-version:
+        description: Node.js version
+        required: true
+        default: lts/*
+      sleep-time:
+        description: Time to wait for dependencies to start
+        required: false
+        default: 30s
+      db-migrate-flag:
+        description: Run DB migrations before tests
+        required: false
+        default: false
+
+jobs:
+  test-integration-coverage:
+    name: Run integration tests with coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: actions checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install@v1
+        with:
+          nodejs-version: ${{ inputs.nodejs-version }}
+
+      - name: Install Node.js Dependencies
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install-dependencies@v1
+
+      - name: Lint
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-lint@v1
+
+      - name: Setup dependencies
+        run: docker compose up -d
+
+      - name: Sleep
+        uses: kibertoad/wait-action@1.0.1
+        with:
+          time: ${{ inputs.sleep-time }}
+
+      - if : ${{ inputs.db-migrate-flag == 'true' }}
+        name: Initialise DB
+        run: npm run test:migrate
+
+      - name: Run Integration Tests
+        working-directory: ${{ inputs.working-directory }}
+        shell: sh
+        run: npm run test:integration-coverage

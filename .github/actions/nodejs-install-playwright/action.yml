@@ -1,0 +1,17 @@
+name: Node.js - Unit Tests
+description: Unit Tests
+
+inputs:
+  working-directory:
+    description: Working directory
+    required: false
+    default: .
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install Playwright
+      working-directory: ${{ inputs.working-directory }}
+      shell: sh
+      run: npx playwright install
