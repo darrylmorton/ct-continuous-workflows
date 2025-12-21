@@ -1,11 +1,6 @@
 name: Node.js - Build, Lint, Unit Tests
 
 on:
-  push:
-    branches-ignore: [ 'main' ]
-  pull_request:
-    branches-ignore: [ 'main' ]
-
   workflow_dispatch:
     inputs:
       nodejs-version:
