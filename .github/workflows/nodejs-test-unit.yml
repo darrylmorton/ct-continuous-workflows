@@ -27,7 +27,7 @@ on:
         description: Working directory
         required: false
         default: .
-        type: boolean
+        type: string
       storybook-playwright-install-flag:
         description: Install playwright for Storybook tests
         required: false
