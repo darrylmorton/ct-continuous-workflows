@@ -12,6 +12,6 @@ runs:
 
   steps:
     - name: Lint
-      working-directory: ${{ inputs.nodejs-version }}
+      working-directory: ${{ inputs.working-directory }}
       shell: sh
       run: npm run lint
