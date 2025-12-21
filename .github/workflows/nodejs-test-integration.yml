@@ -20,6 +20,29 @@ on:
         required: false
         default: false
 
+  workflow_call:
+    inputs:
+      working-directory:
+        description: Working directory
+        required: true
+        default: .
+        type: string
+      nodejs-version:
+        description: Node.js version
+        required: true
+        default: lts/*
+        type: string
+      sleep-time:
+        description: Time to wait for dependencies to start
+        required: false
+        default: 30s
+        type: boolean
+      db-migrate-flag:
+        description: Run DB migrations before tests
+        required: false
+        default: false
+        type: boolean
+
 jobs:
   test-integration-coverage:
     name: Run integration tests with coverage
@@ -48,7 +71,7 @@ jobs:
         with:
           time: ${{ inputs.sleep-time }}
 
-      - if : ${{ inputs.db-migrate-flag == 'true' }}
+      - if: ${{ inputs.db-migrate-flag == 'true' }}
         name: Initialise DB
         run: npm run test:migrate
 
