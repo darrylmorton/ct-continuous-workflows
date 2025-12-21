@@ -16,6 +16,24 @@ on:
         required: false
         default: false
 
+  workflow_call:
+    inputs:
+      nodejs-version:
+        description: Node.js version
+        required: true
+        default: lts/*
+        type: string
+      working-directory:
+        description: Working directory
+        required: false
+        default: .
+        type: boolean
+      storybook-playwright-install-flag:
+        description: Install playwright for Storybook tests
+        required: false
+        default: false
+        type: boolean
+
 jobs:
   test-unit-coverage:
     name: Run Unit Tests with Coverage
