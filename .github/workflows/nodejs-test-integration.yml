@@ -3,14 +3,14 @@ name: Node.js - Build, Lint, Integration Tests
 on:
   workflow_dispatch:
     inputs:
-      working-directory:
-        description: Working directory
-        required: true
-        default: .
       nodejs-version:
         description: Node.js version
         required: true
         default: lts/*
+      working-directory:
+        description: Working directory
+        required: false
+        default: .
       sleep-time:
         description: Time to wait for dependencies to start
         required: false
@@ -22,15 +22,15 @@ on:
 
   workflow_call:
     inputs:
-      working-directory:
-        description: Working directory
-        required: true
-        default: .
-        type: string
       nodejs-version:
         description: Node.js version
         required: true
         default: lts/*
+        type: string
+      working-directory:
+        description: Working directory
+        required: false
+        default: .
         type: string
       sleep-time:
         description: Time to wait for dependencies to start
