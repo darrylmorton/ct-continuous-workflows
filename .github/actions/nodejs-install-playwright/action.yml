@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Node.js - Unit Tests
 description: Unit Tests
 
 inputs:
@@ -11,7 +11,7 @@ runs:
   using: composite
 
   steps:
-    - name: Run Unit Tests
+    - name: Install Playwright
       working-directory: ${{ inputs.working-directory }}
       shell: sh
-      run: npm run test:unit-coverage
+      run: npx playwright install

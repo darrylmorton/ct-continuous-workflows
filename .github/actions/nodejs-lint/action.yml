@@ -1,4 +1,4 @@
-name: Lint
+name: Node.js - Lint
 description: Lint
 
 inputs:

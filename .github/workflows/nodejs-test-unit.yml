@@ -1,0 +1,46 @@
+name: Node.js - Build, Lint, Unit Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      nodejs-version:
+        description: Node.js version
+        required: true
+        default: lts/*
+      working-directory:
+        description: Working directory
+        required: false
+        default: .
+      storybook-playwright-install-flag:
+        description: Install playwright for Storybook tests
+        required: false
+        default: false
+
+jobs:
+  test-unit-coverage:
+    name: Run Unit Tests with Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: actions checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install@v1
+        with:
+          nodejs-version: ${{ inputs.nodejs-version }}
+
+      - name: Install Node.js Dependencies
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install-dependencies@v1
+
+      - name: Lint
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-lint@v1
+
+      - if: ${{ inputs.storybook-playwright-install-flag == 'true' }}
+        name: Install Playwright
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install-playwright@v1
+
+      - name: Run Unit Tests
+        working-directory: ${{ inputs.working-directory }}
+        shell: sh
+        run: npm run test:unit-coverage
