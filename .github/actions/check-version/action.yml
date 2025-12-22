@@ -19,8 +19,14 @@ runs:
 
       shell: sh
       run: |
-        latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r .tag_name)
+        latest_release_version=$(curl -s -H "Authorization: Bearer ${{ github.token }}" https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')
         echo "Latest release: $latest_release_version"
+
+        if [ -z "$latest_release_version" ]; then
+          echo "Error: No releases found for repository '${{ inputs.repository }}' or 'tag_name' is missing in the latest release." >&2
+          exit 1
+        fi
+        
         poetry run python scripts/check_version.py --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
         app_version=$(poetry run python scripts/app_version.py --package-manager ${{ inputs.package-manager }})
         echo "app_version=$app_version" >> "$GITHUB_OUTPUT"

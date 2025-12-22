@@ -48,8 +48,6 @@ jobs:
     needs: [ check-version ]
     permissions:
       contents: write
-    env:
-      BRANCH_NAME: ${{ needs.check-version.outputs.app_version }}
 
     steps:
       - name: Create and push tag
