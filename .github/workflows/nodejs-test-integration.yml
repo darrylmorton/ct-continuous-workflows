@@ -32,6 +32,11 @@ on:
         required: false
         default: '.'
         type: string
+      working-directory:
+        description: Working directory
+        required: false
+        default: .
+        type: string
       sleep-time:
         description: Time to wait for dependencies to start
         required: false
