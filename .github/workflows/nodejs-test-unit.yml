@@ -6,11 +6,11 @@ on:
       nodejs-version:
         description: Node.js version
         required: true
-        default: lts/*
+        default: 'lts/*'
       working-directory:
         description: Working directory
         required: false
-        default: .
+        default: '.'
       storybook-playwright-install-flag:
         description: Install playwright for Storybook tests
         required: false
@@ -21,12 +21,12 @@ on:
       nodejs-version:
         description: Node.js version
         required: true
-        default: lts/*
+        default: 'lts/*'
         type: string
       working-directory:
         description: Working directory
         required: false
-        default: .
+        default: '.'
         type: string
       storybook-playwright-install-flag:
         description: Install playwright for Storybook tests
