@@ -11,6 +11,7 @@ Checklist of what this README covers
 
 Available reusable items (examples in this repo)
 - Actions (directories under `.github/actions/`):
+  - check-version
   - nodejs-install
   - nodejs-install-dependencies
   - nodejs-lint
@@ -19,6 +20,7 @@ Available reusable items (examples in this repo)
   - nodejs-setup
 
 - Workflows (files under `.github/workflows/`):
+  - ghcr-release.yml
   - nodejs-test-unit.yml
   - nodejs-test-integration.yml
   - storybook-github-pages-publish.yml
@@ -29,12 +31,14 @@ Tagging and versioning — the idea
 
 Tags created in this repository
 - Per-action/workflow tags (one tag per reusable item):
+  - check-version/v1
   - nodejs-install/v1
   - nodejs-install-dependencies/v1
   - nodejs-lint/v1
   - nodejs-install-playwright/v1
   - nodejs-build/v1
   - nodejs-setup/v1
+  - ghcr-release/v1
   - nodejs-test-unit/v1
   - nodejs-test-integration/v1
   - storybook-github-pages-publish/v1
@@ -47,6 +51,9 @@ Commands I ran to create and push these tags (exact commands executed)
 
 ```bash
 # Commands executed for each tag (created annotated tag at HEAD and pushed)
+git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a check-version/v1 -m "Release check-version/v1"
+git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin check-version/v1 --force
+
 git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-install/v1 -m "Release nodejs-install/v1"
 git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-install/v1 --force
 
@@ -79,7 +86,7 @@ git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push
 
 ```bash
 cd /Users/mortond/Projects/creatively_technical/ct-continuous-workflows && \
-for tag in nodejs-install/v1 nodejs-install-dependencies/v1 nodejs-lint/v1 nodejs-install-playwright/v1 nodejs-build/v1 nodejs-setup/v1 nodejs-test-unit/v1 nodejs-test-integration/v1 storybook-github-pages-publish/v1; do 
+for tag in check-version/v1 nodejs-install/v1 nodejs-install-dependencies/v1 nodejs-lint/v1 nodejs-install-playwright/v1 nodejs-build/v1 nodejs-setup/v1 nodejs-test-unit/v1 nodejs-test-integration/v1 storybook-github-pages-publish/v1; do 
   git tag -f -a "$tag" -m "Release $tag" && git push origin "$tag" --force;
 done
 ```

@@ -1,0 +1,26 @@
+name: Check Version
+description: Check application version against latest release
+
+inputs:
+  repository:
+    description: GitHub repository in the format owner/repo
+    required: false
+    default: ${{ github.repository }}
+  package-manager:
+    description: Package manager to use (e.g. npm, poetry)
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Run version check script
+      id: app_version_step
+
+      shell: sh
+      run: |
+        latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r .tag_name)
+        echo "Latest release: $latest_release_version"
+        poetry run python scripts/check_version.py --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
+        app_version=$(poetry run python scripts/app_version.py --package-manager ${{ inputs.package-manager }})
+        echo "app_version=$app_version" >> "$GITHUB_OUTPUT"
