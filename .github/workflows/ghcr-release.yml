@@ -31,10 +31,17 @@ jobs:
 
   check-version:
     needs: [ if_merged ]
-    uses: darrylmorton/ct-continuous-workflows/.github/actions/check-version.yml@v1
-    with:
-      repository: ${{ inputs.repository }}
-      package-manager: ${{ inputs.package-manager }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: actions checkout
+        uses: actions/checkout@v4
+
+      - name: check-version
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/check-version.yml@v1
+        with:
+          repository: ${{ inputs.repository }}
+          package-manager: ${{ inputs.package-manager }}
 
   create-tag:
     runs-on: ubuntu-latest
