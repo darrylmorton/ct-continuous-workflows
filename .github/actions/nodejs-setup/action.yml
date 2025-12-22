@@ -5,11 +5,11 @@ inputs:
   working-directory:
     description: Working directory
     required: false
-    default: .
+    default: '.'
   nodejs-version:
     description: Node.js version
     required: false
-    default: lts/*
+    default: 'lts/*'
 
 runs:
   using: composite

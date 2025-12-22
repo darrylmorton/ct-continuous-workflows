@@ -6,15 +6,15 @@ on:
       nodejs-version:
         description: Node.js version
         required: true
-        default: lts/*
+        default: 'lts/*'
       working-directory:
         description: Working directory
         required: false
-        default: .
+        default: '.'
       sleep-time:
         description: Time to wait for dependencies to start
         required: false
-        default: 30s
+        default: '30s'
       db-migrate-flag:
         description: Run DB migrations before tests
         required: false
@@ -25,7 +25,12 @@ on:
       nodejs-version:
         description: Node.js version
         required: true
-        default: lts/*
+        default: 'lts/*'
+        type: string
+      working-directory:
+        description: Working directory
+        required: false
+        default: '.'
         type: string
       working-directory:
         description: Working directory
@@ -35,8 +40,8 @@ on:
       sleep-time:
         description: Time to wait for dependencies to start
         required: false
-        default: 30s
-        type: boolean
+        default: '30s'
+        type: string
       db-migrate-flag:
         description: Run DB migrations before tests
         required: false
