@@ -4,8 +4,7 @@ description: Check application version against latest release
 inputs:
   repository:
     description: GitHub repository in the format owner/repo
-    required: false
-    default: ${{ github.repository }}
+    required: true
   package-manager:
     description: Package manager to use (e.g. npm, poetry)
     required: true
@@ -19,28 +18,26 @@ runs:
   using: composite
 
   steps:
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Install python
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
       with:
-        python-version: '3.11'
+        python-version: ${{ inputs.python-version }}
 
-    - name: Install Poetry
-      shell: sh
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install poetry==1.8.3
+    - name: Install poetry
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
+      with:
+        poetry-version: ${{ inputs.poetry-version }}
+        python-version: ${{ inputs.python-version }}
 
-    - name: Install dependencies
-      shell: sh
-      run: |
-        poetry install --no-root
+    - name: Install poetry dependencies
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
 
     - name: Run version check script
       id: app_version_step
 
       shell: sh
       run: |
-        latest_release_version=$(curl -s -H "Authorization: Bearer ${{ github.token }}" https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')
+        latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')
         echo "Latest release: $latest_release_version"
 
         if [ -z "$latest_release_version" ]; then

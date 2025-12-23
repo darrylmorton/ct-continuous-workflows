@@ -1,10 +1,9 @@
 import logging
 import structlog
 
-import config
 
 log_level_names = logging.getLevelNamesMapping()
-log_level = log_level_names.get(config.LOG_LEVEL)
+log_level = log_level_names.get("DEBUG")
 
 structlog.configure(
     processors=[
