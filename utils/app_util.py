@@ -1,7 +1,6 @@
 import json
+import tomllib
 from pathlib import Path
-
-import toml
 
 
 class AppUtil:
@@ -42,7 +41,8 @@ class AppUtil:
             pyproject_toml_file = Path(__file__).parent.parent.parent / "pyproject.toml"
 
             if pyproject_toml_file.exists() and pyproject_toml_file.is_file():
-                app_version = toml.load(pyproject_toml_file)["tool"]["poetry"]["version"]
+                with open(pyproject_toml_file, 'rb') as f:
+                    app_version = tomllib.load(f)["tool"]["poetry"]["version"]
 
         if not app_version:
             raise ValueError(f'app_version: {app_version} is invalid')
