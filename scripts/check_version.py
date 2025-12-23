@@ -31,7 +31,7 @@ def main(arg_list: list[str] | None = None):
     # )
 
     try:
-        latest_release_version = Version(args.latest_release_version)
+        Version(args.latest_release_version)
     except InvalidVersion as error:
         error_message = (
             f"Invalid Release version {args.latest_release_version} does not match "
@@ -41,14 +41,14 @@ def main(arg_list: list[str] | None = None):
 
         raise InvalidVersion(error_message)
 
-    if not latest_release_version:
-        error_message = f"Invalid Release version {latest_release_version}"
+    if not args.latest_release_version:
+        error_message = f"Invalid Release version {args.latest_release_version}"
         # log.error(error_message)
 
         raise ValueError(error_message)
-    if not match(r"^[0-9]+\.[0-9]+\.[0-9]+$", f"{latest_release_version}"):
+    if not match(r"^[0-9]+\.[0-9]+\.[0-9]+$", f"{args.latest_release_version}"):
         error_message = (
-            f"Invalid Release version {latest_release_version} does not match "
+            f"Invalid Release version {args.latest_release_version} does not match "
             f"semver format"
         )
         # log.error(error_message)
@@ -60,7 +60,7 @@ def main(arg_list: list[str] | None = None):
     if Version(app_version) <= Version(args.latest_release_version):
         error_message = (
             f"Invalid App version {app_version} is less than or equal "
-            f"to the Release version {latest_release_version}"
+            f"to the Release version {args.latest_release_version}"
         )
         # log.error(error_message)
 
