@@ -19,6 +19,22 @@ runs:
   using: composite
 
   steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install Poetry
+      shell: sh
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      shell: sh
+      run: |
+        poetry install --no-root
+
     - name: Run version check script
       id: app_version_step
 
