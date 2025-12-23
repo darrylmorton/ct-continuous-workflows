@@ -3,7 +3,7 @@ from re import match
 
 from packaging.version import Version, InvalidVersion
 
-from utils.app_util import AppUtil
+from ctcw.utils.app_util import AppUtil
 
 
 def main(arg_list: list[str] | None = None):

@@ -48,3 +48,4 @@ class AppUtil:
             raise ValueError(f'app_version: {app_version} is invalid')
 
         return app_version
+

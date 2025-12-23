@@ -1,9 +1,9 @@
 import argparse
 
-from utils.app_util import AppUtil
+from ctcw.utils.app_util import AppUtil
 
 
-def get_app_version(arg_list: list[str] | None = None):
+def main(arg_list: list[str] | None = None):
     parser = argparse.ArgumentParser(
         description="Retrieve and print the application version for the given package manager."
     )
@@ -22,4 +22,5 @@ def get_app_version(arg_list: list[str] | None = None):
 
 
 if __name__ == "__main__":
-    get_app_version()
+    main()
+

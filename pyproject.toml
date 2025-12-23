@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "ct-continuous-workflows"
-version = "0.1.0"
+version = "1.0.0"
 description = "Utility scripts for continuous workflows"
 authors = []
+packages = [{"include" = "ctcw"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -11,3 +12,6 @@ packaging = "^24.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+check-version = "ctcw.scripts.check_version:main"
