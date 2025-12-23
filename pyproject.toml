@@ -5,7 +5,7 @@ description = "Utility scripts for continuous workflows"
 authors = []
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 packaging = "^24.0"
 tomli = "^2.0.0"
 
