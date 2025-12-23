@@ -1,10 +1,6 @@
 import json
+import tomllib
 from pathlib import Path
-
-try:
-    import tomllib  # Python 3.11+
-except ImportError:
-    import tomli as tomllib  # Python < 3.11
 
 
 class AppUtil:
