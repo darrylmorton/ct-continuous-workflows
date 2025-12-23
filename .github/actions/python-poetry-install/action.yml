@@ -4,12 +4,10 @@ description: Install
 inputs:
   poetry-version:
     description: Poetry version
-    required: false
-    default: '1.7.1'
+    required: true
   python-version:
     description: Python version
-    required: false
-    default: '3.11.9'
+    required: true
 
 runs:
   using: composite

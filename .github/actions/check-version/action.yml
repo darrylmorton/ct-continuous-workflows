@@ -2,6 +2,12 @@ name: Check Version
 description: Check application version against latest release
 
 inputs:
+  poetry-version:
+    description: Poetry version
+    required: false
+  python-version:
+    description: Python version
+    required: false
   repository:
     description: GitHub repository in the format owner/repo
     required: true

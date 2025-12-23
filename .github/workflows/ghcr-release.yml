@@ -3,6 +3,16 @@ name: Build and publish a Docker image
 on:
   workflow_call:
     inputs:
+      python-version:
+        description: Python version
+        required: false
+        default: '3.11.9'
+        type: string
+      poetry-version:
+        description: Poetry version
+        required: false
+        default: '1.7.1'
+        type: string
       repository:
         description: GitHub repository in the format owner/repo
         required: false
@@ -34,6 +44,8 @@ jobs:
         id: check-version
         uses: darrylmorton/ct-continuous-workflows/.github/actions/check-version@v1
         with:
+          poetry-version: ${{ inputs.poetry-version }}
+          python-version: ${{ inputs.python-version }}
           repository: ${{ inputs.repository }}
           package-manager: ${{ inputs.package-manager }}
 
