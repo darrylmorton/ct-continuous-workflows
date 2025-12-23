@@ -38,9 +38,9 @@ Tags created in this repository
   - nodejs-install-playwright/v1
   - nodejs-build/v1
   - nodejs-setup/v1
-  - ghcr-release/v1
   - nodejs-test-unit/v1
   - nodejs-test-integration/v1
+  - ghcr-release/v1
   - storybook-github-pages-publish/v1
 
 - Repository-level convenience tag:
