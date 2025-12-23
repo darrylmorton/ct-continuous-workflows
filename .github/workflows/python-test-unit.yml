@@ -2,6 +2,17 @@ name: Python - Test Unit
 
 on:
   workflow_call:
+    inputs:
+      python-version:
+        description: Python version
+        required: false
+        default: '3.11.9'
+        type: string
+      poetry-version:
+        description: Poetry version
+        required: false
+        default: '1.7.1'
+        type: string
 
 jobs:
   test-unit-coverage:
@@ -14,9 +25,14 @@ jobs:
 
       - name: Install python
         uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
+        with:
+          python-version: ${{ inputs.python-version }}
 
       - name: Install poetry
         uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
+        with:
+          poetry-version: ${{ inputs.poetry-version }}
+          python-version: ${{ inputs.python-version }}
 
       - name: Install poetry dependencies
         uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
