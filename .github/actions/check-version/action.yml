@@ -10,6 +10,11 @@ inputs:
     description: Package manager to use (e.g. npm, poetry)
     required: true
 
+outputs:
+  app_version:
+    description: Application version from package manager
+    value: ${{ steps.app_version_step.outputs.app_version }}
+
 runs:
   using: composite
 

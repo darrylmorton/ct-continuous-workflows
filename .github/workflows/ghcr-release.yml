@@ -32,12 +32,15 @@ jobs:
   check-version:
     needs: [ if_merged ]
     runs-on: ubuntu-latest
+    outputs:
+      app_version: ${{ steps.check-version.outputs.app_version }}
 
     steps:
       - name: actions checkout
         uses: actions/checkout@v4
 
       - name: check-version
+        id: check-version
         uses: darrylmorton/ct-continuous-workflows/.github/actions/check-version@v1
         with:
           repository: ${{ inputs.repository }}
