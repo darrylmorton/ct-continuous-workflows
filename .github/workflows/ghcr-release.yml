@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: check-version
-        uses: darrylmorton/ct-continuous-workflows/.github/actions/check-version.yml@v1
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/check-version@v1
         with:
           repository: ${{ inputs.repository }}
           package-manager: ${{ inputs.package-manager }}
