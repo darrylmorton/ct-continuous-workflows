@@ -1,28 +1,27 @@
 name: Python - Test Integration
-#description: Test Integration
 
 on:
   workflow_call:
     inputs:
-      poetry-cache-key:
-        description: Poetry cache key
-        required: true
       sleep-time:
         description: Sleep time in seconds
         required: false
         default: '5s'
+        type: string
       port:
         description: Port
         required: false
         default: '8001'
+        type: string
       healthcheck-route:
         description: Healthcheck route
         required: false
         default: 'healthz'
+        type: string
     secrets:
-        repo-token:
-          description: Secret repo token
-          required: true
+      repo-token:
+        description: Secret repo token
+        required: true
 
 jobs:
   test-integration-coverage:

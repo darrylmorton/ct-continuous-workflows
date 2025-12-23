@@ -1,12 +1,7 @@
-name: Python - Test UnitUnit
+name: Python - Test Unit
 
 on:
   workflow_call:
-    inputs:
-      poetry-cache-key:
-        description: Poetry cache key
-        required: true
-        type: string
 
 jobs:
   test-unit-coverage:
