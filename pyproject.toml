@@ -2,12 +2,19 @@
 name = "ct-continuous-workflows"
 version = "1.0.0"
 description = "Utility scripts for continuous workflows"
-authors = []
-packages = [{"include" = "ctcw"}]
+authors = ["Darryl Morton"]
+license = "GNU"
+readme = "README.md"
+packages = [{"include" = "ctcw", "from" = "src"}]
+keywords = ["ct", "ci", "workflows"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 packaging = "^24.0"
+structlog = "^25.5.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.14.10"
 
 [build-system]
 requires = ["poetry-core"]

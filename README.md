@@ -12,18 +12,23 @@ Checklist of what this README covers
 Available reusable items (examples in this repo)
 - Actions (directories under `.github/actions/`):
   - check-version
-  - nodejs-install
+  - nodejs-setup
   - nodejs-install-dependencies
   - nodejs-lint
   - nodejs-install-playwright
-  - nodejs-build
-  - nodejs-setup
+  - nodejs-build setup
+  - python-setup
+  - python-poetry-install
+  - python-poetry-install-dependencies
+  - python-lint
 
 - Workflows (files under `.github/workflows/`):
   - ghcr-release.yml
   - nodejs-test-unit.yml
   - nodejs-test-integration.yml
   - storybook-github-pages-publish.yml
+  - python-test-unit.yml
+  - python-test-integration.yml
 
 Tagging and versioning — the idea
 - Git tags point to a commit snapshot of the *whole* repository. When a caller references `owner/repo/path@ref`, GitHub checks out the repo at the commit referenced by `ref`.
@@ -32,16 +37,19 @@ Tagging and versioning — the idea
 Tags created in this repository
 - Per-action/workflow tags (one tag per reusable item):
   - check-version/v1
-  - nodejs-install/v1
+  - nodejs-setup/v1
   - nodejs-install-dependencies/v1
   - nodejs-lint/v1
   - nodejs-install-playwright/v1
   - nodejs-build/v1
-  - nodejs-setup/v1
   - nodejs-test-unit/v1
   - nodejs-test-integration/v1
   - ghcr-release/v1
   - storybook-github-pages-publish/v1
+  - python-setup/v1
+  - python-poetry-install/v1
+  - python-poetry-install-dependencies/v1
+  - python-lint/v1
 
 - Repository-level convenience tag:
   - v1
@@ -54,8 +62,8 @@ Commands I ran to create and push these tags (exact commands executed)
 git -C tag -f -a check-version/v1 -m "Release check-version/v1"
 git -C push origin check-version/v1 --force
 
-git -C tag -f -a nodejs-install/v1 -m "Release nodejs-install/v1"
-git -C push origin nodejs-install/v1 --force
+git -C tag -f -a nodejs-setup/v1 -m "Release nodejs-setup/v1"
+git -C push origin nodejs-setup/v1 --force
 
 git -C tag -f -a nodejs-install-dependencies/v1 -m "Release nodejs-install-dependencies/v1"
 git -C push origin nodejs-install-dependencies/v1 --force
@@ -69,9 +77,6 @@ git -C push origin nodejs-install-playwright/v1 --force
 git -C tag -f -a nodejs-build/v1 -m "Release nodejs-build/v1"
 git -C push origin nodejs-build/v1 --force
 
-git -C tag -f -a nodejs-setup/v1 -m "Release nodejs-setup/v1"
-git -C push origin nodejs-setup/v1 --force
-
 git -C tag -f -a nodejs-test-unit/v1 -m "Release nodejs-test-unit/v1"
 git -C push origin nodejs-test-unit/v1 --force
 
@@ -80,12 +85,24 @@ git -C push origin nodejs-test-integration/v1 --force
 
 git -C tag -f -a storybook-github-pages-publish/v1 -m "Release storybook-github-pages-publish/v1"
 git -C push origin storybook-github-pages-publish/v1 --force
+
+git -C tag -f -a python-setup/v1 -m "Release python-setup/v1"
+git -C push origin python-setup/v1 --force
+
+git -C tag -f -a python-install/v1 -m "Release python-install/v1"
+git -C push origin python-install/v1 --force
+
+git -C tag -f -a python-install/v1 -m "Release python-install-dependencies/v1"
+git -C push origin python-install-dependencies/v1 --force
+
+git -C tag -f -a python-lint/v1 -m "Release python-lint/v1"
+git -C push origin python-lint/v1 --force
 ```
 
 - The loop command used to create & push multiple tags in one go (this was executed from the repo root):
 
 ```bash
-for tag in check-version/v1 nodejs-install/v1 nodejs-install-dependencies/v1 nodejs-lint/v1 nodejs-install-playwright/v1 nodejs-build/v1 nodejs-setup/v1 nodejs-test-unit/v1 nodejs-test-integration/v1 storybook-github-pages-publish/v1; do 
+for tag in check-version/v1 nodejs-setup/v1 nodejs-install-dependencies/v1 nodejs-lint/v1 nodejs-install-playwright/v1 nodejs-build/v1 nodejs-test-unit/v1 nodejs-test-integration/v1 storybook-github-pages-publish/v1 python-setup/v1 python-install/v1 python-install-dependencies/v1 python-lint/v1; do 
   git tag -f -a "$tag" -m "Release $tag" && git push origin "$tag" --force;
 done
 ```

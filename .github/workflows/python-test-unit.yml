@@ -1,0 +1,30 @@
+name: Python - Test UnitUnit
+
+on:
+  workflow_call:
+    inputs:
+      poetry-cache-key:
+        description: Poetry cache key
+        required: true
+        type: string
+
+jobs:
+  test-unit-coverage:
+    name: Run Unit Tests with Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: actions checkout
+        uses: actions/checkout@v4
+
+      - name: Install python
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
+
+      - name: Install poetry
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
+
+      - name: Install poetry dependencies
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
+
+      - name: Run unit tests
+        run: make test-unit

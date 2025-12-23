@@ -4,10 +4,11 @@ from re import match
 from packaging.version import Version, InvalidVersion
 
 from ctcw.utils.app_util import AppUtil
+from logger import log
 
 
 def main(arg_list: list[str] | None = None):
-    # log.info(f"main called with args: {arg_list}")
+    log.info(f"main called with args: {arg_list}")
 
     parser = argparse.ArgumentParser(
         description="Check Application version is greater than the Release version."
@@ -26,9 +27,7 @@ def main(arg_list: list[str] | None = None):
 
     package_manager = AppUtil.validate_package_manager(args.package_manager)
 
-    # log.info(
-    #     f"Valid Package manager {package_manager}."
-    # )
+    log.info(f"Valid Package manager {package_manager}.")
 
     try:
         Version(args.latest_release_version)
@@ -37,13 +36,13 @@ def main(arg_list: list[str] | None = None):
             f"Invalid Release version {args.latest_release_version} does not match "
             f"semver format: {error}"
         )
-        # log.error(error_message)
+        log.error(error_message)
 
         raise InvalidVersion(error_message)
 
     if not args.latest_release_version:
         error_message = f"Invalid Release version {args.latest_release_version}"
-        # log.error(error_message)
+        log.error(error_message)
 
         raise ValueError(error_message)
     if not match(r"^[0-9]+\.[0-9]+\.[0-9]+$", f"{args.latest_release_version}"):
@@ -51,7 +50,7 @@ def main(arg_list: list[str] | None = None):
             f"Invalid Release version {args.latest_release_version} does not match "
             f"semver format"
         )
-        # log.error(error_message)
+        log.error(error_message)
 
         raise ValueError(error_message)
 
@@ -62,14 +61,14 @@ def main(arg_list: list[str] | None = None):
             f"Invalid App version {app_version} is less than or equal "
             f"to the Release version {args.latest_release_version}"
         )
-        # log.error(error_message)
+        log.error(error_message)
 
         raise ValueError(error_message)
 
-    # log.info(
-    #     f"Valid Application version bump to {app_version} (greater than the "
-    #     f"latest Release version {args.latest_release_version})."
-    # )
+    log.info(
+        f"Valid Application version bump to {app_version} (greater than the "
+        f"latest Release version {args.latest_release_version})."
+    )
 
 
 if __name__ == "__main__":

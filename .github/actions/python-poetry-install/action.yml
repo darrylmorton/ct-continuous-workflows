@@ -1,0 +1,31 @@
+name: Poetry Install
+description: Install
+
+inputs:
+  poetry-version:
+    description: Poetry version
+    required: false
+    default: '1.7.1'
+  python-version:
+    description: Python version
+    required: false
+    default: '3.11.9'
+
+runs:
+  using: composite
+
+  steps:
+    - uses: snok/install-poetry@v1
+      with:
+        version: ${{ inputs.poetry-version }}
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        virtualenvs-path: .venv
+        installer-parallel: true
+
+    - name: Generate Cache Key
+      id: cached_poetry_dependencies_step
+      shell: sh
+      run: |
+        poetry_cache_key="venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('poetry.lock') }}"
+        echo "poetry_cache_key=$poetry_cache_key" >> "$GITHUB_OUTPUT"

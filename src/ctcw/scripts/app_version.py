@@ -23,4 +23,3 @@ def main(arg_list: list[str] | None = None):
 
 if __name__ == "__main__":
     main()
-

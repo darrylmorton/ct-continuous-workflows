@@ -1,0 +1,63 @@
+name: Python - Test Integration
+#description: Test Integration
+
+on:
+  workflow_call:
+    inputs:
+      poetry-cache-key:
+        description: Poetry cache key
+        required: true
+      sleep-time:
+        description: Sleep time in seconds
+        required: false
+        default: '5s'
+      port:
+        description: Port
+        required: false
+        default: '8001'
+      healthcheck-route:
+        description: Healthcheck route
+        required: false
+        default: 'healthz'
+    secrets:
+        repo-token:
+          description: Secret repo token
+          required: true
+
+jobs:
+  test-integration-coverage:
+    name: Run Integration Tests with Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: actions checkout
+        uses: actions/checkout@v4
+
+      - name: Install python
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
+
+      - name: Install poetry
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
+
+      - name: Install poetry dependencies
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
+
+      - name: Log in to registry
+        run: echo "${{ secrets.repo-token }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Setup dependencies
+        run: docker compose -f docker-compose.yml up -d
+
+      - name: Sleep for 10s
+        uses: juliangruber/sleep-action@v2.0.0
+        with:
+          time: ${{ inputs.sleep-time }}
+
+      - name: Docker running containers
+        run: docker ps -a
+
+      - name: Curl Authentication Service Health Check
+        run: curl http://localhost:${{ inputs.port }}/${{ inputs.healthcheck-route }}
+
+      - name: Run integration tests
+        run: make migrations && make test-integration

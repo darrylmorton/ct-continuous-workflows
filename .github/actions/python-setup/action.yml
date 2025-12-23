@@ -1,0 +1,17 @@
+name: Python - Setup
+description: Setup
+
+inputs:
+  python-version:
+    description: Python version
+    required: false
+    default: '3.11.9'
+
+runs:
+  using: composite
+
+  steps:
+    - uses: actions/setup-python@v5
+      id: setup-python
+      with:
+        python-version: ${{ inputs.python-version }}

@@ -1,0 +1,22 @@
+name: Poetry Install Dependencies
+description: Install Dependencies
+
+runs:
+  using: composite
+
+  steps:
+    - name: Load Cached Venv
+      id: cached_poetry_dependencies
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: ${{ steps.cached_poetry_dependencies_step.outputs.poetry_cache_key }}
+
+    - name: Install Dependencies
+      if: steps.cached_poetry_dependencies.outputs.cache-hit != 'true'
+      shell: sh
+      run: poetry install --no-interaction --no-root
+
+    - name: Install Project
+      shell: sh
+      run: poetry install --no-interaction
