@@ -5,7 +5,7 @@ from utils.app_util import AppUtil
 
 def get_app_version(arg_list: list[str] | None = None):
     parser = argparse.ArgumentParser(
-        description="Check Application version is greater than the Release version."
+        description="Retrieve and print the application version for the given package manager."
     )
     parser.add_argument(
         "--package-manager",
