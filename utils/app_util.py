@@ -44,4 +44,7 @@ class AppUtil:
             if pyproject_toml_file.exists() and pyproject_toml_file.is_file():
                 app_version = toml.load(pyproject_toml_file)["tool"]["poetry"]["version"]
 
+        if not app_version:
+            raise ValueError(f'app_version: {app_version} is invalid')
+
         return app_version
