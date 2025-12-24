@@ -61,17 +61,17 @@ runs:
       shell: sh
       run: poetry install --no-interaction --no-root
 
-    - name: Install Dependencies
+    - name: Install Dependencies with Repo Path
       if: steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path == 'true'
       shell: sh
-      run: poetry install --no-interaction --no-root -C ${{ steps.get-repo-from-action-path.outputs.repo-path }}
-
-    - name: Install Project with Repo Path
-      if: steps.get-repo-from-action-path.outputs.repo-path == 'true'
-      shell: sh
-      run: poetry install --no-interaction -C ${{ steps.get-repo-from-action-path.outputs.repo-path }}
+      run: poetry install -C ${{ steps.get-repo-from-action-path.outputs.repo-path }} --no-interaction --no-root
 
     - name: Install Project
       if: steps.get-repo-from-action-path.outputs.repo-path != 'true'
       shell: sh
       run: poetry install --no-interaction
+
+    - name: Install Project with Repo Path
+      if: steps.get-repo-from-action-path.outputs.repo-path == 'true'
+      shell: sh
+      run: poetry install -C ${{ steps.get-repo-from-action-path.outputs.repo-path }} --no-interaction
