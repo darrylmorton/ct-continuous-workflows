@@ -114,7 +114,6 @@ done
 - The convenience single `v1` tag was created and pushed with:
 
 ```bash
-cd /Users/mortond/Projects/creatively_technical/ct-continuous-workflows
 git tag -f -a v1 -m "v1 tag (created for caller reference)"
 git push origin v1 --force
 ```
