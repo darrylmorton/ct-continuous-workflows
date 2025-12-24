@@ -46,15 +46,16 @@ jobs:
         uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
         with:
           python-version: ${{ inputs.python-version }}
-
-      - name: Install poetry
-        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
-        with:
           poetry-version: ${{ inputs.poetry-version }}
-          python-version: ${{ inputs.python-version }}
 
-      - name: Install poetry dependencies
-        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
+#      - name: Install poetry
+#        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
+#        with:
+#          poetry-version: ${{ inputs.poetry-version }}
+#          python-version: ${{ inputs.python-version }}
+#
+#      - name: Install poetry dependencies
+#        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
 
       - name: Log in to registry
         run: echo "${{ secrets.gh-token }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

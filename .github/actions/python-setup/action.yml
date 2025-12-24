@@ -5,12 +5,37 @@ inputs:
   python-version:
     description: Python version
     required: true
+  poetry-version:
+    description: Poetry version
+    required: true
 
 runs:
   using: composite
 
   steps:
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       id: setup-python
       with:
         python-version: ${{ inputs.python-version }}
+
+    - name: Load cached Poetry installation
+      id: cached-poetry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache
+        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install Poetry
+      if: steps.cached-poetry.outputs.cache-hit != 'true'
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ inputs.poetry-version }}
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        virtualenvs-path: .venv
+        installer-parallel: true
+
+    - name: Configure poetry
+      if: steps.cached-poetry.outputs.cache-hit == 'true'
+      shell: sh
+      run: poetry config virtualenvs.in-project true
