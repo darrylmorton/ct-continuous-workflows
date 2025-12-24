@@ -57,14 +57,12 @@ runs:
       run: poetry config virtualenvs.in-project true
 
     - name: Install Dependencies
-      if: steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path != 'true'
+      if: ${{ steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path != 'true' }}
       shell: sh
-      run: |
-        echo ${{ steps.get-repo-from-action-path.outputs.repo-path }}
-        poetry install --no-interaction --no-root
+      run: poetry install --no-interaction --no-root
 
     - name: Install Dependencies with Repo Path
-      if: steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path == 'true'
+      if: ${{ steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path == 'true' }}
       shell: sh
       run: poetry install -C ${{ steps.get-repo-from-action-path.outputs.repo-path }} --no-interaction --no-root
 
