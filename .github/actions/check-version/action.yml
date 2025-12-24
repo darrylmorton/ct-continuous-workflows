@@ -67,6 +67,6 @@ runs:
         ls -la ${{ github.action_path }}/../../
         ls -la ${{ github.action_path }}/../../../
         
-        poetry run python scripts/check_version.py --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
-        app_version=$(poetry run python scripts/app_version.py --package-manager ${{ inputs.package-manager }})
+        poetry run -C ${{ github.action_path }}/../../../ check_version --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
+        app_version=$(poetry run -C ${{ github.action_path }}/../../../ app_version --package-manager ${{ inputs.package-manager }})
         echo "app-version=$app_version" >> "$GITHUB_OUTPUT"
