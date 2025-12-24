@@ -39,6 +39,7 @@ runs:
           echo "Error: Unsupported package manager '${{ inputs.package-manager }}'" >&2
           exit 1
         fi
+        echo "Lockfile path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}"
 
     - name: Set python
       uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
@@ -58,6 +59,8 @@ runs:
           echo "Error: No releases found for repository '${{ inputs.repository }}' or 'tag_name' is missing in the latest release." >&2
           exit 1
         fi
+        
+        echo ls -la
         
         poetry run python scripts/check_version.py --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
         app_version=$(poetry run python scripts/app_version.py --package-manager ${{ inputs.package-manager }})
