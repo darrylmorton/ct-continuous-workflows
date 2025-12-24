@@ -1,0 +1,54 @@
+name: Python - Setup
+description: Setup
+
+inputs:
+  python-version:
+    description: Python version
+    required: true
+  poetry-version:
+    description: Poetry version
+    required: true
+  lockfile-path:
+    description: Path to the poetry lockfile
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - uses: actions/checkout@v5
+
+    - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Load cached Poetry installation
+      id: cached-poetry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache
+        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles(inputs.lockfile-path) }}
+
+    - name: Install Poetry
+      if: steps.cached-poetry.outputs.cache-hit != 'true'
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ inputs.poetry-version }}
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        virtualenvs-path: .venv
+        installer-parallel: true
+
+    - name: Configure poetry
+      if: steps.cached-poetry.outputs.cache-hit == 'true'
+      shell: sh
+      run: poetry config virtualenvs.in-project true
+
+    - name: Install Dependencies
+      if: steps.cached-poetry.outputs.cache-hit!= 'true'
+      shell: sh
+      run: poetry install --no-interaction --no-root
+
+    - name: Install Project
+      shell: sh
+      run: poetry install --no-interaction

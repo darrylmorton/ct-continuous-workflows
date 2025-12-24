@@ -44,7 +44,7 @@ runs:
         echo "Lockfile path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}"
 
     - name: Set python
-      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
         poetry-version: ${{ inputs.poetry-version }}
