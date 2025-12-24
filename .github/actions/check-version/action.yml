@@ -19,16 +19,33 @@ outputs:
   app_version:
     description: Application version from package manager
     value: ${{ steps.app_version_step.outputs.app_version }}
+  lockfile-path:
+    description: Path to the lockfile used
+    value: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
 
 runs:
   using: composite
 
   steps:
+    - name: Set lockfile path
+      id: set_lockfile_path
+      shell: sh
+      run: |
+        if [ "${{ inputs.package-manager }}" = "poetry" ]; then
+          echo "lockfile_path=**/poetry.lock" >> "$GITHUB_OUTPUT"
+        elif [ "${{ inputs.package-manager }}" = "npm" ]; then
+          echo "lockfile_path=**/package-lock.json" >> "$GITHUB_OUTPUT"
+        else
+          echo "Error: Unsupported package manager '${{ inputs.package-manager }}'" >&2
+          exit 1
+        fi
+
     - name: Set python
       uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
         poetry-version: ${{ inputs.poetry-version }}
+        lockfile-path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
 
 #    - name: Install poetry
 #      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
@@ -41,7 +58,6 @@ runs:
 
     - name: Run version check script
       id: app_version_step
-
       shell: sh
       run: |
         latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')

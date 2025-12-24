@@ -31,7 +31,27 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
+#  set-lockfile-path:
+#    runs-on: ubuntu-latest
+#    outputs:
+#      lockfile-path: ${{ steps.set-lockfile-path.outputs.lockfile-path }}
+#
+#    steps:
+#      - name: Set lockfile path
+#        id: set-lockfile-path
+#        shell: sh
+#        run: |
+#          if [ "${{ inputs.package-manager }}" = "poetry" ]; then
+#            echo "lockfile-path=**/poetry.lock" >> "$GITHUB_OUTPUT"
+#          elif [ "${{ inputs.package-manager }}" = "npm" ]; then
+#            echo "lockfile-path=**/package-lock.json" >> "$GITHUB_OUTPUT"
+#          else
+#            echo "Error: Unsupported package manager '${{ inputs.package-manager }}'" >&2
+#            exit 1
+#          fi
+
   check-version:
+#    needs: [ set-lockfile-path ]
     runs-on: ubuntu-latest
     outputs:
       app_version: ${{ steps.check-version.outputs.app_version }}
