@@ -16,9 +16,9 @@ inputs:
     required: true
 
 outputs:
-  app_version:
+  app-version:
     description: Application version from package manager
-    value: ${{ steps.app_version_step.outputs.app_version }}
+    value: ${{ steps.app_version_step.outputs.app-version }}
   lockfile-path:
     description: Path to the lockfile used
     value: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
@@ -32,9 +32,9 @@ runs:
       shell: sh
       run: |
         if [ "${{ inputs.package-manager }}" = "poetry" ]; then
-          echo "lockfile_path=**/poetry.lock" >> "$GITHUB_OUTPUT"
+          echo "lockfile-path=**/poetry.lock" >> "$GITHUB_OUTPUT"
         elif [ "${{ inputs.package-manager }}" = "npm" ]; then
-          echo "lockfile_path=**/package-lock.json" >> "$GITHUB_OUTPUT"
+          echo "lockfile-path=**/package-lock.json" >> "$GITHUB_OUTPUT"
         else
           echo "Error: Unsupported package manager '${{ inputs.package-manager }}'" >&2
           exit 1
@@ -46,15 +46,6 @@ runs:
         python-version: ${{ inputs.python-version }}
         poetry-version: ${{ inputs.poetry-version }}
         lockfile-path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
-
-#    - name: Install poetry
-#      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
-#      with:
-#        poetry-version: ${{ inputs.poetry-version }}
-#        python-version: ${{ inputs.python-version }}
-#
-#    - name: Install poetry dependencies
-#      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
 
     - name: Run version check script
       id: app_version_step
@@ -70,4 +61,4 @@ runs:
         
         poetry run python scripts/check_version.py --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
         app_version=$(poetry run python scripts/app_version.py --package-manager ${{ inputs.package-manager }})
-        echo "app_version=$app_version" >> "$GITHUB_OUTPUT"
+        echo "app-version=$app_version" >> "$GITHUB_OUTPUT"
