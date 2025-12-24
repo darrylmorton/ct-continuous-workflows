@@ -60,7 +60,8 @@ runs:
           exit 1
         fi
         
-        ls -la
+        ls -la /home/runner
+        ls -la /home/runner/work
         
         poetry run python scripts/check_version.py --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
         app_version=$(poetry run python scripts/app_version.py --package-manager ${{ inputs.package-manager }})
