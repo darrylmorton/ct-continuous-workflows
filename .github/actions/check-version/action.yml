@@ -27,6 +27,8 @@ runs:
   using: composite
 
   steps:
+    - uses: actions/checkout@v5
+
     - name: Set lockfile path
       id: set_lockfile_path
       shell: sh

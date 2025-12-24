@@ -16,8 +16,7 @@ runs:
   using: composite
 
   steps:
-    - name: Check out repository
-      uses: actions/checkout@v5
+    - uses: actions/checkout@v5
 
     - uses: actions/setup-python@v6
       id: setup-python
@@ -45,3 +44,12 @@ runs:
       if: steps.cached-poetry.outputs.cache-hit == 'true'
       shell: sh
       run: poetry config virtualenvs.in-project true
+
+    - name: Install Dependencies
+      if: steps.cached-poetry.outputs.cache-hit!= 'true'
+      shell: sh
+      run: poetry install --no-interaction --no-root
+
+    - name: Install Project
+      shell: sh
+      run: poetry install --no-interaction
