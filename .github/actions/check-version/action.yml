@@ -49,6 +49,7 @@ runs:
         python-version: ${{ inputs.python-version }}
         poetry-version: ${{ inputs.poetry-version }}
         lockfile-path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
+        action-path-required: 'true'
 
     - name: Run version check script
       id: app_version_step

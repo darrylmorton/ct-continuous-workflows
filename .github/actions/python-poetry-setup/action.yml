@@ -11,6 +11,10 @@ inputs:
   lockfile-path:
     description: Path to the poetry lockfile
     required: true
+  action-path-required:
+    description: Action path required
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -21,6 +25,14 @@ runs:
     - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
+
+    - name: get-repo-from-action-path
+      if: inputs.action-path-required == 'true'
+      id: get-repo-from-action-path
+      shell: sh
+      run: |
+          repo_path="${{ github.action_path }}/../../../"
+          echo "repo-path=$repo_path" >> "$GITHUB_OUTPUT"
 
     - name: Load cached Poetry installation
       id: cached-poetry
@@ -45,10 +57,21 @@ runs:
       run: poetry config virtualenvs.in-project true
 
     - name: Install Dependencies
-      if: steps.cached-poetry.outputs.cache-hit!= 'true'
+      if: steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path != 'true'
       shell: sh
       run: poetry install --no-interaction --no-root
 
+    - name: Install Dependencies
+      if: steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path == 'true'
+      shell: sh
+      run: poetry install --no-interaction --no-root -C ${{ steps.get-repo-from-action-path.outputs.repo-path }}
+
+    - name: Install Project with Repo Path
+      if: steps.get-repo-from-action-path.outputs.repo-path == 'true'
+      shell: sh
+      run: poetry install --no-interaction -C ${{ steps.get-repo-from-action-path.outputs.repo-path }}
+
     - name: Install Project
+      if: steps.get-repo-from-action-path.outputs.repo-path != 'true'
       shell: sh
       run: poetry install --no-interaction
