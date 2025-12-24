@@ -1,0 +1,57 @@
+name: Check Version
+description: Check application version against latest release
+
+inputs:
+  poetry-version:
+    description: Poetry version
+    required: false
+  python-version:
+    description: Python version
+    required: false
+  repository:
+    description: GitHub repository in the format owner/repo
+    required: true
+  package-manager:
+    description: Package manager to use (e.g. npm, poetry)
+    required: true
+
+outputs:
+  app_version:
+    description: Application version from package manager
+    value: ${{ steps.app_version_step.outputs.app_version }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup poetry
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
+      with:
+        python-version: ${{ inputs.python-version }}
+        poetry-version: ${{ inputs.poetry-version }}
+
+#    - name: Install poetry
+#      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
+#      with:
+#        poetry-version: ${{ inputs.poetry-version }}
+#        python-version: ${{ inputs.python-version }}
+#
+#    - name: Install poetry dependencies
+#      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
+
+    - name: Run version check script
+      id: app_version_step
+
+      shell: sh
+      run: |
+        latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')
+        echo "Latest release: $latest_release_version"
+
+        if [ -z "$latest_release_version" ]; then
+          echo "Error: No releases found for repository '${{ inputs.repository }}' or 'tag_name' is missing in the latest release." >&2
+          exit 1
+        fi
+        
+        poetry run python scripts/check_version.py --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
+        app_version=$(poetry run python scripts/app_version.py --package-manager ${{ inputs.package-manager }})
+        echo "app_version=$app_version" >> "$GITHUB_OUTPUT"

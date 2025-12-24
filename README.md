@@ -15,8 +15,19 @@ Available reusable items (examples in this repo)
   - nodejs-install-dependencies
   - nodejs-lint
   - nodejs-install-playwright
+<<<<<<< Updated upstream
   - nodejs-build
   - nodejs-setup
+=======
+  - nodejs-build setup
+  - python-setup
+  - python-poetry-setup
+
+[//]: # (  - python-poetry-install)
+
+[//]: # (  - python-poetry-install-dependencies)
+  - python-lint
+>>>>>>> Stashed changes
 
 - Workflows (files under `.github/workflows/`):
   - nodejs-test-unit.yml
@@ -38,6 +49,16 @@ Tags created in this repository
   - nodejs-test-unit/v1
   - nodejs-test-integration/v1
   - storybook-github-pages-publish/v1
+<<<<<<< Updated upstream
+=======
+  - python-setup/v1
+  - python-poetry-setup/v1
+
+[//]: # (  - python-poetry-install/v1)
+
+[//]: # (  - python-poetry-install-dependencies/v1)
+  - python-lint/v1
+>>>>>>> Stashed changes
 
 - Repository-level convenience tag:
   - v1
@@ -71,15 +92,39 @@ git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push
 git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-test-integration/v1 -m "Release nodejs-test-integration/v1"
 git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-test-integration/v1 --force
 
+<<<<<<< Updated upstream
 git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a storybook-github-pages-publish/v1 -m "Release storybook-github-pages-publish/v1"
 git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin storybook-github-pages-publish/v1 --force
+=======
+git -C tag -f -a storybook-github-pages-publish/v1 -m "Release storybook-github-pages-publish/v1"
+git -C push origin storybook-github-pages-publish/v1 --force
+
+git -C tag -f -a python-setup/v1 -m "Release python-setup/v1"
+git -C push origin python-setup/v1 --force
+
+git -C tag -f -a python-poetry-setup/v1 -m "Release python-poetry-setup/v1"
+git -C push origin python-poetry-setup/v1 --force
+
+#git -C tag -f -a python-install/v1 -m "Release python-install/v1"
+#git -C push origin python-install/v1 --force
+#
+#git -C tag -f -a python-install/v1 -m "Release python-install-dependencies/v1"
+#git -C push origin python-install-dependencies/v1 --force
+
+git -C tag -f -a python-lint/v1 -m "Release python-lint/v1"
+git -C push origin python-lint/v1 --force
+>>>>>>> Stashed changes
 ```
 
 - The loop command used to create & push multiple tags in one go (this was executed from the repo root):
 
 ```bash
+<<<<<<< Updated upstream
 cd /Users/mortond/Projects/creatively_technical/ct-continuous-workflows && \
 for tag in nodejs-install/v1 nodejs-install-dependencies/v1 nodejs-lint/v1 nodejs-install-playwright/v1 nodejs-build/v1 nodejs-setup/v1 nodejs-test-unit/v1 nodejs-test-integration/v1 storybook-github-pages-publish/v1; do 
+=======
+for tag in check-version/v1 nodejs-setup/v1 nodejs-install-dependencies/v1 nodejs-lint/v1 nodejs-install-playwright/v1 nodejs-build/v1 nodejs-test-unit/v1 nodejs-test-integration/v1 storybook-github-pages-publish/v1 python-setup/v1 python-poetry-setup/v1 python-lint/v1; do 
+>>>>>>> Stashed changes
   git tag -f -a "$tag" -m "Release $tag" && git push origin "$tag" --force;
 done
 ```
