@@ -55,7 +55,7 @@ runs:
       id: app_version_step
       shell: sh
       run: |
-        set -euo pipefail
+#        set -euo pipefail
 
         latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')
         echo "Latest release: $latest_release_version"
