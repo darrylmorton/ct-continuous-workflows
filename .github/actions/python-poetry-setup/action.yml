@@ -15,6 +15,10 @@ inputs:
     description: Action path required
     required: false
     default: 'false'
+  repo-path:
+    description: Path to the repository root
+    required: false
+    default: ''
 
 outputs:
   repo-path:
@@ -30,12 +34,6 @@ runs:
     - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
-
-    - name: Resolve repo root
-      id: get-repo-root
-      uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
-      with:
-        action-path-required: ${{ inputs.action-path-required }}
 
     - name: Load cached Poetry installation
       id: cached-poetry
@@ -63,9 +61,9 @@ runs:
       if: steps.cached-poetry.outputs.cache-hit != 'true'
       shell: sh
       run: |
-        repo="${{ steps.get-repo-root.outputs.repo-path }}"
-        if [ -n "$repo" ]; then
-          poetry install -C "$repo" --no-interaction --no-root
+        repo_path="${{ inputs.repo-path }}"
+        if [ -n "$repo_path" ]; then
+          poetry install -C "$repo_path" --no-interaction --no-root
         else
           poetry install --no-interaction --no-root
         fi
@@ -73,9 +71,9 @@ runs:
     - name: Install Project
       shell: sh
       run: |
-        repo="${{ steps.get-repo-root.outputs.repo-path }}"
-        if [ -n "$repo" ]; then
-          poetry install -C "$repo" --no-interaction
+        repo_path="${{ inputs.repo-path }}"
+        if [ -n "$repo_path" ]; then
+          poetry install -C "$repo_path" --no-interaction
         else
           poetry install --no-interaction
         fi
