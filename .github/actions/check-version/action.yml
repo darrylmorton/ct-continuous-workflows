@@ -77,7 +77,11 @@ runs:
         # an explicit input repo-path, otherwise fall back to the repo-path
         # exported by the python-poetry-setup step (which itself calls get-repo-root).
         action_required="${{ inputs.action-path-required }}"
+        echo "Action required: $action_required"
+
         repo_path="${{ inputs.repo-path }}"
+        echo "Repo path: $repo_path"
+
         if [ -z "$repo_path" ]; then
           repo_path="${{ steps.setup-python.outputs.repo-path }}"
         fi
@@ -86,6 +90,9 @@ runs:
         echo "GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH:-}"
         echo "resolved repo_path=$repo_path"
 
+        ls -la "${repo_path:-.}"
+        ls -la "${repo_path}"
+        
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
             echo "Running check in repo path: $repo_path"
