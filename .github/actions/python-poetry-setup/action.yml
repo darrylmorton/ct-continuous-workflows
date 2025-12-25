@@ -16,6 +16,11 @@ inputs:
     required: false
     default: 'false'
 
+outputs:
+  repo-path:
+    description: Repository path from action path
+    value: ${{ steps.get-repo-from-action-path.outputs.repo-path }}
+
 runs:
   using: composite
 
@@ -31,8 +36,35 @@ runs:
       id: get-repo-from-action-path
       shell: sh
       run: |
-          repo_path="${{ github.action_path }}/../../../"
-          echo "repo-path=$repo_path" >> "$GITHUB_OUTPUT"
+          # Resolve the path where the action code is located on the runner.
+          # Prefer the env var; fall back to the context. If neither is available,
+          # fall back to the workspace root.
+          action_path="${GITHUB_ACTION_PATH:-${{ github.action_path }}}"
+
+          if [ -z "$action_path" ]; then
+            echo "repo-path=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # If the action is in an in-repo .github/actions/... directory, strip
+          # the suffix to get the repository root. Otherwise, fall back to
+          # stepping up three directories from the action path.
+          case "$action_path" in
+            */.github/actions/*)
+              repo_path="${action_path%%/.github/actions/*}"
+              ;;
+            *)
+              # realpath gives a normalized absolute path; common available on runners
+              repo_path="$(realpath "$action_path/../../..")"
+              ;;
+          esac
+
+          # Emit empty string if repo_path is empty to make downstream checks simple
+          if [ -z "$repo_path" ]; then
+            echo "repo-path=" >> "$GITHUB_OUTPUT"
+          else
+            echo "repo-path=$repo_path" >> "$GITHUB_OUTPUT"
+          fi
 
     - name: Load cached Poetry installation
       id: cached-poetry
@@ -57,21 +89,21 @@ runs:
       run: poetry config virtualenvs.in-project true
 
     - name: Install Dependencies
-      if: ${{ steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path != 'true' }}
+      if: ${{ steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path == '' }}
       shell: sh
       run: poetry install --no-interaction --no-root
 
     - name: Install Dependencies with Repo Path
-      if: ${{ steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path == 'true' }}
+      if: ${{ steps.cached-poetry.outputs.cache-hit != 'true' && steps.get-repo-from-action-path.outputs.repo-path != '' }}
       shell: sh
       run: poetry install -C ${{ steps.get-repo-from-action-path.outputs.repo-path }} --no-interaction --no-root
 
     - name: Install Project
-      if: steps.get-repo-from-action-path.outputs.repo-path != 'true'
+      if: steps.get-repo-from-action-path.outputs.repo-path == ''
       shell: sh
       run: poetry install --no-interaction
 
     - name: Install Project with Repo Path
-      if: steps.get-repo-from-action-path.outputs.repo-path == 'true'
+      if: steps.get-repo-from-action-path.outputs.repo-path != ''
       shell: sh
       run: poetry install -C ${{ steps.get-repo-from-action-path.outputs.repo-path }} --no-interaction
