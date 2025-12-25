@@ -29,7 +29,9 @@ runs:
         # The last fallback is important for in-repo actions where the runner
         # doesn't set GITHUB_ACTION_PATH but the workspace points at the repo root.
         action_path="${GITHUB_ACTION_PATH:-${{ github.action_path }}}"
-
+        echo "Determined action path: $action_path"
+        echo "GitHub workspace: $GITHUB_WORKSPACE"
+        
         # If action_path is empty but GITHUB_WORKSPACE exists, assume this is an in-repo action
         # and use the workspace as the repo root.
         if [ -z "$action_path" ] && [ -n "$GITHUB_WORKSPACE" ]; then
