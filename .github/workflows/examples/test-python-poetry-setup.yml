@@ -1,0 +1,23 @@
+name: Test - Python Poetry Setup
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  test-poetry-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call python-poetry-setup composite action
+        id: setup
+        uses: ./.github/actions/python-poetry-setup
+        with:
+          python-version: '3.11'
+          poetry-version: '1.3.2'
+          lockfile-path: '**/poetry.lock'
+          action-path-required: 'true'
+
+      - name: Show resolved repo-path
+        run: |
+          echo "repo-path="
+          echo "${{ steps.setup.outputs.repo-path }}"
+

@@ -35,6 +35,7 @@ Tagging and versioning — the idea
 Tags created in this repository
 - Per-action/workflow tags (one tag per reusable item):
   - check-version/v1
+  - get-repo-root/v1
   - ghcr-release/v1
   - nodejs-build/v1
   - nodejs-install-dependencies/v1
@@ -57,8 +58,11 @@ Commands I ran to create and push these tags (exact commands executed)
 
 ```bash
 # Commands executed for each tag (created annotated tag at HEAD and pushed)
-git -C tag -f -a check-version/v1 -m "Release ghcr-release/v1"
-git -C push origin ghcr-release/v1 --force
+git -C tag -f -a check-version/v1 -m "Release check-version/v1"
+git -C push origin check-version/v1 --force
+
+git -C tag -f -a get-repo-root/v1 -m "Release get-repo-root/v1"
+git -C push origin get-repo-root/v1 --force
 
 git -C tag -f -a ghcr-release/v1 -m "Release ghcr-release/v1"
 git -C push origin ghcr-release/v1 --force
@@ -106,7 +110,7 @@ git -C push origin storybook-github-pages-publish/v1 --force
 - The loop command used to create & push multiple tags in one go (this was executed from the repo root):
 
 ```bash
-for tag in check-version/v1 ghcr-release/v1 nodejs-build/v1 nodejs-install-dependencies/v1 nodejs-install-playwright/v1 nodejs-lint/v1 nodejs-setup/v1 nodejs-test-integration/v1 nodejs-test-unit/v1 python-lint/v1 python-poetry-setup/v1 python-setup/v1 python-test-integration/v1 python-test-unit/v1 storybook-github-pages-publish/v1; do 
+for tag in check-version/v1 get-repo-root/v1 ghcr-release/v1 nodejs-build/v1 nodejs-install-dependencies/v1 nodejs-install-playwright/v1 nodejs-lint/v1 nodejs-setup/v1 nodejs-test-integration/v1 nodejs-test-unit/v1 python-lint/v1 python-poetry-setup/v1 python-setup/v1 python-test-integration/v1 python-test-unit/v1 storybook-github-pages-publish/v1; do 
   git tag -f -a "$tag" -m "Release $tag" && git push origin "$tag" --force;
 done
 ```
