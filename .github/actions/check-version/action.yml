@@ -83,7 +83,7 @@ runs:
         echo "Repo path: $repo_path"
 
         if [ -z "$repo_path" ]; then
-          repo_path="${{ steps.setup-python.outputs.repo-path }}"
+          repo_path="${{ inputs.repo-path }}"
         fi
 
         # Debug listings (optional) - keep minimal to assist troubleshooting

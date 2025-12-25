@@ -69,8 +69,12 @@ runs:
       shell: sh
       run: |
         action_required="${{ inputs.action-path-required }}"
+        echo "Action required: $action_required"
+
         # Prefer explicit input (caller-provided) and fall back to resolved path
         repo_path="${{ inputs.repo-path }}"
+        echo "Repo path: $repo_path"
+
         if [ -z "$repo_path" ]; then
           repo_path="${{ inputs.repo-path }}"
         fi
@@ -90,7 +94,11 @@ runs:
       shell: sh
       run: |
         action_required="${{ inputs.action-path-required }}"
+        echo "Action required: $action_required"
+        
         repo_path="${{ inputs.repo-path }}"
+        echo "Repo path: $repo_path"
+
         if [ -z "$repo_path" ]; then
           repo_path="${{ inputs.repo-path }}"
         fi

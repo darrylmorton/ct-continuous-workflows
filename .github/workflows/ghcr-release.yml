@@ -63,6 +63,7 @@ jobs:
           python-version: ${{ inputs.python-version }}
           repository: ${{ inputs.repository }}
           package-manager: ${{ inputs.package-manager }}
+          action-path-required: 'true'
           repo-path: ${{ needs.get-repo-root.outputs.repo-path }}
 
   create-tag:
