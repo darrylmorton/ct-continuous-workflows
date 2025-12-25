@@ -63,6 +63,7 @@ jobs:
           python-version: ${{ inputs.python-version }}
           repository: ${{ inputs.repository }}
           package-manager: ${{ inputs.package-manager }}
+          repo-path: ${{ needs.get-repo-root.outputs.repo-path }}
 
   create-tag:
     runs-on: ubuntu-latest
