@@ -61,9 +61,16 @@ runs:
       if: steps.cached-poetry.outputs.cache-hit != 'true'
       shell: sh
       run: |
+        action_required="${{ inputs.action-path-required }}"
         repo_path="${{ inputs.repo-path }}"
-        if [ -n "$repo_path" ]; then
-          poetry install -C "$repo_path" --no-interaction --no-root
+        
+        if [ "$action_required" = 'true' ]; then
+          if [ -n "$repo_path" ]; then
+            poetry install -C "$repo_path" --no-interaction --no-root
+          else
+            echo "error: action-path-required is 'true' but repo-path is empty" >&2
+            exit 1
+          fi
         else
           poetry install --no-interaction --no-root
         fi
@@ -72,8 +79,15 @@ runs:
       shell: sh
       run: |
         repo_path="${{ inputs.repo-path }}"
-        if [ -n "$repo_path" ]; then
-          poetry install -C "$repo_path" --no-interaction
+        action_required="${{ inputs.action-path-required }}"
+        
+        if [ "$action_required" = 'true' ]; then
+          if [ -n "$repo_path" ]; then
+            poetry install -C "$repo_path" --no-interaction
+          else
+            echo "error: action-path-required is 'true' but repo-path is empty" >&2
+            exit 1
+          fi
         else
           poetry install --no-interaction
         fi

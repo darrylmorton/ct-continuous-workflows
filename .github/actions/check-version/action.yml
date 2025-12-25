@@ -75,14 +75,19 @@ runs:
         echo "GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH:-}" 
         echo "resolved repo_path=$repo_path"
 
-        if [ -n "$repo_path" ]; then
-          echo "Running check in repo path: $repo_path"
-          poetry run -C "$repo_path" check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
-          app_version=$(poetry run -C "$repo_path" app_version --package-manager "${{ inputs.package-manager }}")
+        if [ "$action_required" = 'true' ]; then
+          if [ -n "$repo_path" ]; then
+            echo "Running check in repo path: $repo_path"
+            poetry run -C "$repo_path" check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+            app_version=$(poetry run -C "$repo_path" app_version --package-manager "${{ inputs.package-manager }}")
+          else
+            echo "error: action-path-required is 'true' but repo-path is empty" >&2
+            exit 1
+          fi
         else
-          echo "Running check in current workspace"
-          poetry run check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
-          app_version=$(poetry run app_version --package-manager "${{ inputs.package-manager }}")
+            echo "Running check in current workspace"
+            poetry run check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+            app_version=$(poetry run app_version --package-manager "${{ inputs.package-manager }}")
         fi
 
         echo "app-version=$app_version" >> "$GITHUB_OUTPUT"

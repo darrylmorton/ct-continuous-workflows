@@ -46,6 +46,7 @@ jobs:
           action-path-required: 'true'
 
   check-version:
+    needs: [ get-repo-root ]
     runs-on: ubuntu-latest
     outputs:
       app-version: ${{ steps.check-version.outputs.app-version }}
