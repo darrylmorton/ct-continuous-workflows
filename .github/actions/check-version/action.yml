@@ -52,7 +52,7 @@ runs:
 
     - name: Set python
       id: setup-python
-      uses: ./.github/actions/python-poetry-setup
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
         poetry-version: ${{ inputs.poetry-version }}

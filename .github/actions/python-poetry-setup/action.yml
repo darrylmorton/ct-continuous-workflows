@@ -38,7 +38,7 @@ runs:
     - name: Resolve repo root (if required)
       id: get-repo-root
       if: inputs.action-path-required == 'true'
-      uses: ./.github/actions/get-repo-root
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
       with:
         action-path-required: ${{ inputs.action-path-required }}
 
