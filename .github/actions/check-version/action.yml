@@ -18,6 +18,10 @@ inputs:
     description: Path to the repository root
     required: false
     default: ''
+  action-path-required:
+    description: Whether to require resolving the action path (used to run commands in repo root)
+    required: false
+    default: 'true'
 
 outputs:
   app-version:
@@ -48,12 +52,12 @@ runs:
 
     - name: Set python
       id: setup-python
-      uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
+      uses: ./.github/actions/python-poetry-setup
       with:
         python-version: ${{ inputs.python-version }}
         poetry-version: ${{ inputs.poetry-version }}
         lockfile-path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
-        action-path-required: 'true'
+        action-path-required: ${{ inputs.action-path-required }}
         repo-path: ${{ inputs.repo-path }}
 
     - name: Run version check script
@@ -68,11 +72,18 @@ runs:
           exit 1
         fi
 
-        # Obtain repo path (may be empty)
+        # action_path requirement
+        # Obtain action-path-required value and repo path (may be empty). Prefer
+        # an explicit input repo-path, otherwise fall back to the repo-path
+        # exported by the python-poetry-setup step (which itself calls get-repo-root).
+        action_required="${{ inputs.action-path-required }}"
         repo_path="${{ inputs.repo-path }}"
+        if [ -z "$repo_path" ]; then
+          repo_path="${{ steps.setup-python.outputs.repo-path }}"
+        fi
 
         # Debug listings (optional) - keep minimal to assist troubleshooting
-        echo "GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH:-}" 
+        echo "GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH:-}"
         echo "resolved repo_path=$repo_path"
 
         if [ "$action_required" = 'true' ]; then

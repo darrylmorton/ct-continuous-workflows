@@ -24,8 +24,19 @@ runs:
       if: inputs.action-path-required == 'true'
       shell: sh
       run: |
-        # Prefer runner env var GITHUB_ACTION_PATH; fall back to github.action_path context
+        # Determine action path using (in order): GITHUB_ACTION_PATH env var,
+        # github.action_path context, and finally fallback to GITHUB_WORKSPACE.
+        # The last fallback is important for in-repo actions where the runner
+        # doesn't set GITHUB_ACTION_PATH but the workspace points at the repo root.
         action_path="${GITHUB_ACTION_PATH:-${{ github.action_path }}}"
+
+        # If action_path is empty but GITHUB_WORKSPACE exists, assume this is an in-repo action
+        # and use the workspace as the repo root.
+        if [ -z "$action_path" ] && [ -n "$GITHUB_WORKSPACE" ]; then
+          repo_path="$GITHUB_WORKSPACE"
+          echo "repo-path=$repo_path" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
 
         if [ -z "$action_path" ]; then
           # no action path available -> emit empty repo-path

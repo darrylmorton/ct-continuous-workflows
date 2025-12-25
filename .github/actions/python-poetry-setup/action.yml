@@ -35,6 +35,13 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
 
+    - name: Resolve repo root (if required)
+      id: get-repo-root
+      if: inputs.action-path-required == 'true'
+      uses: ./.github/actions/get-repo-root
+      with:
+        action-path-required: ${{ inputs.action-path-required }}
+
     - name: Load cached Poetry installation
       id: cached-poetry
       uses: actions/cache@v4
@@ -62,7 +69,11 @@ runs:
       shell: sh
       run: |
         action_required="${{ inputs.action-path-required }}"
+        # Prefer explicit input (caller-provided) and fall back to resolved path
         repo_path="${{ inputs.repo-path }}"
+        if [ -z "$repo_path" ]; then
+          repo_path="${{ steps.get-repo-root.outputs.repo-path }}"
+        fi
         
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
@@ -78,8 +89,11 @@ runs:
     - name: Install Project
       shell: sh
       run: |
-        repo_path="${{ inputs.repo-path }}"
         action_required="${{ inputs.action-path-required }}"
+        repo_path="${{ inputs.repo-path }}"
+        if [ -z "$repo_path" ]; then
+          repo_path="${{ steps.get-repo-root.outputs.repo-path }}"
+        fi
         
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
