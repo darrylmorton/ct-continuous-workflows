@@ -41,9 +41,9 @@ runs:
           echo "Error: Unsupported package manager '${{ inputs.package-manager }}'" >&2
           exit 1
         fi
-        echo "Lockfile path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}"
 
     - name: Set python
+      id: setup-python
       uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
@@ -55,6 +55,8 @@ runs:
       id: app_version_step
       shell: sh
       run: |
+        set -euo pipefail
+
         latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')
         echo "Latest release: $latest_release_version"
 
@@ -62,14 +64,22 @@ runs:
           echo "Error: No releases found for repository '${{ inputs.repository }}' or 'tag_name' is missing in the latest release." >&2
           exit 1
         fi
-        
-        ls -la /home/runner
-        ls -la /home/runner/work
-        ls -la ${{ github.action_path }}
-        ls -la ${{ github.action_path }}/../
-        ls -la ${{ github.action_path }}/../../
-        ls -la ${{ github.action_path }}/../../../
-        
-        poetry run -C ${{ github.action_path }}/../../../ check_version --package-manager ${{ inputs.package-manager }} --latest-release-version $latest_release_version
-        app_version=$(poetry run -C ${{ github.action_path }}/../../../ app_version --package-manager ${{ inputs.package-manager }})
+
+        # Obtain repo path (may be empty)
+        repo_path="${{ steps.setup-python.outputs.repo-path }}"
+
+        # Debug listings (optional) - keep minimal to assist troubleshooting
+        echo "GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH:-}" 
+        echo "resolved repo_path=$repo_path"
+
+        if [ -n "$repo_path" ]; then
+          echo "Running check in repo path: $repo_path"
+          poetry run -C "$repo_path" check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+          app_version=$(poetry run -C "$repo_path" app_version --package-manager "${{ inputs.package-manager }}")
+        else
+          echo "Running check in current workspace"
+          poetry run check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+          app_version=$(poetry run app_version --package-manager "${{ inputs.package-manager }}")
+        fi
+
         echo "app-version=$app_version" >> "$GITHUB_OUTPUT"
