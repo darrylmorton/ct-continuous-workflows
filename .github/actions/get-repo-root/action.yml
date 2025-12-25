@@ -8,8 +8,8 @@ description: |
 inputs:
   action-path-required:
     description: "If 'true', run resolution step. If 'false', outputs will be empty string."
-    required: false
-    default: 'true'
+    required: true
+    default: 'false'
 
 outputs:
   repo-path:
