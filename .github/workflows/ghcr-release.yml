@@ -13,10 +13,6 @@ on:
         required: false
         default: '1.7.1'
         type: string
-#      repository:
-#        description: GitHub repository in the format owner/repo
-#        required: false
-#        type: string
       package-manager:
         description: Package manager to use (e.g. npm, poetry)
         required: true
@@ -50,7 +46,6 @@ jobs:
         with:
           poetry-version: ${{ inputs.poetry-version }}
           python-version: ${{ inputs.python-version }}
-          repository: ${{ env.REPOSITORY }}
           package-manager: ${{ inputs.package-manager }}
           action-path-required: 'true'
 
