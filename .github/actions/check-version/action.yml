@@ -97,11 +97,8 @@ runs:
         ls -la "${repo_path}"
 
         workspace_path="${GITHUB_WORKSPACE}"
-        echo "GITHUB_WORKSPACE_PATH=${GITHUB_WORKSPACE}"
-        ls -la "${GITHUB_WORKSPACE_PATH}"
-        
-#        echo "github_workspace=${{ github.workspace }}"
-#        ls -la ${{ github.workspace }}
+        echo "workspace_path=$workspace_path"
+        ls -la "$workspace_path"
         
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
