@@ -66,13 +66,17 @@ runs:
 
     - name: Run version check script
       id: app_version_step
+      env:
+        REPOSITORY: ${{ github.repository }}
       shell: sh
       run: |
-        latest_release_version=$(curl -s https://api.github.com/repos/${{ inputs.repository }}/releases/latest | jq -r '.tag_name // empty')
+        echo "GITHUB_REPOSITORY: ${{ env.REPOSITORY }}"
+        
+        latest_release_version=$(curl -s https://api.github.com/repos/${{ env.REPOSITORY }}/releases/latest | jq -r '.tag_name // empty')
         echo "Latest release: $latest_release_version"
 
         if [ -z "$latest_release_version" ]; then
-          echo "Error: No releases found for repository '${{ inputs.repository }}' or 'tag_name' is missing in the latest release." >&2
+          echo "Error: No releases found for repository '${{ env.REPOSITORY }}' or 'tag_name' is missing in the latest release." >&2
           exit 1
         fi
 

@@ -20,11 +20,6 @@ inputs:
     required: false
     default: ''
 
-#outputs:
-#  repo-path:
-#    description: Repository path from action path
-#    value: ${{ steps.get-repo-root.outputs.repo-path }}
-
 runs:
   using: composite
 
