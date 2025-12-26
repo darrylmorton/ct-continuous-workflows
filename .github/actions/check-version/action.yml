@@ -14,10 +14,6 @@ inputs:
   package-manager:
     description: Package manager to use (e.g. npm, poetry)
     required: true
-#  repo-path:
-#    description: Path to the repository root
-#    required: false
-#    default: ''
   action-path-required:
     description: Whether to require resolving the action path (used to run commands in repo root)
     required: false
@@ -68,8 +64,6 @@ runs:
         action-path-required: ${{ inputs.action-path-required }}
         repo-path: ${{ steps.get_repo_root.outputs.repo-path }}
 
-
-
     - name: Run version check script
       id: app_version_step
       shell: sh
@@ -107,7 +101,7 @@ runs:
           if [ -n "$repo_path" ]; then
             echo "Running check in repo path: $repo_path"
             poetry run -C "$repo_path" check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
-            app_version=$(poetry run -C "$repo_path" app-version --package-manager "${{ inputs.package-manager }}")
+            app_version=$(poetry run -C "$repo_path" app-version --package-manager "${{ inputs.package-manager }}") --workspace-path "$GITHUB_WORKSPACE"
           else
             echo "error: action-path-required is 'true' but repo-path is empty" >&2
             exit 1
@@ -115,7 +109,7 @@ runs:
         else
             echo "Running check in current workspace"
             poetry run check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
-            app_version=$(poetry run app-version --package-manager "${{ inputs.package-manager }}")
+            app_version=$(poetry run app-version --package-manager "${{ inputs.package-manager }}" --workspace-path "$GITHUB_WORKSPACE")
         fi
 
         echo "app-version=$app_version" >> "$GITHUB_OUTPUT"

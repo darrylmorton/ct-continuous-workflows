@@ -22,13 +22,11 @@ class AppUtil:
         return package_manager
 
     @staticmethod
-    def get_app_version(package_manager: str) -> str:
+    def get_app_version(package_manager: str, workspace_path: str) -> str:
         app_version = None
 
         if package_manager == "npm":
-            package_json_file = (
-                Path(__file__).parent.parent.parent.parent / "package.json"
-            )
+            package_json_file = f"{workspace_path}/package.json"
 
             try:
                 with open(package_json_file, "r") as file:
@@ -41,9 +39,7 @@ class AppUtil:
                 raise FileNotFoundError(error_message)
 
         if package_manager == "poetry":
-            pyproject_toml_file = (
-                Path(__file__).parent.parent.parent.parent / "pyproject.toml"
-            )
+            pyproject_toml_file = f"{workspace_path}/pyproject.toml"
 
             try:
                 with open(pyproject_toml_file, "rb") as f:

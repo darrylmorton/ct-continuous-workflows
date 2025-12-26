@@ -12,11 +12,16 @@ def main(arg_list: list[str] | None = None):
         required=True,
         help="Package manager selected",
     )
+    parser.add_argument(
+        "--workspace-path",
+        required=True,
+        help="Path",
+    )
     args = parser.parse_args(arg_list)
 
     package_manager = AppUtil.validate_package_manager(args.package_manager)
 
-    app_version = AppUtil.get_app_version(package_manager)
+    app_version = AppUtil.get_app_version(package_manager, args.workspace_path)
 
     print(app_version)
 
