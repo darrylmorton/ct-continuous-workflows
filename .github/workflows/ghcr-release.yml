@@ -13,10 +13,10 @@ on:
         required: false
         default: '1.7.1'
         type: string
-      repository:
-        description: GitHub repository in the format owner/repo
-        required: false
-        type: string
+#      repository:
+#        description: GitHub repository in the format owner/repo
+#        required: false
+#        type: string
       package-manager:
         description: Package manager to use (e.g. npm, poetry)
         required: true
@@ -29,7 +29,8 @@ on:
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
   REGISTRY: ghcr.io
-
+  REPOSITORY: ${{ github.repository }}
+  
 jobs:
   check-version:
     runs-on: ubuntu-latest
@@ -40,13 +41,16 @@ jobs:
       - name: actions checkout
         uses: actions/checkout@v4
 
+      - name: GITHUB REPOSITORY VIA GHCR RELEASE
+        run: echo "${{ github.repository }}"
+
       - name: check-version
         id: check-version
         uses: darrylmorton/ct-continuous-workflows/.github/actions/check-version@v1
         with:
           poetry-version: ${{ inputs.poetry-version }}
           python-version: ${{ inputs.python-version }}
-          repository: ${{ inputs.repository }}
+          repository: ${{ env.REPOSITORY }}
           package-manager: ${{ inputs.package-manager }}
           action-path-required: 'true'
 
@@ -95,7 +99,7 @@ jobs:
             latest=true
             prefix=
             suffix=
-          images: ${{ env.REGISTRY }}/${{ inputs.repository }}
+          images: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}
           tags: ${{ needs.check-version.outputs.app-version }}
 
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
@@ -114,6 +118,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ inputs.repository }}
+          subject-name: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true

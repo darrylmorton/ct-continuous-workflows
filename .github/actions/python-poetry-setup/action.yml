@@ -37,7 +37,6 @@ runs:
     #  -----  install & configure poetry  -----
     #----------------------------------------------
     - name: Install Poetry
-#      if: steps.cached-poetry.outputs.cache-hit != 'true'
       uses: snok/install-poetry@v1
       with:
         version: ${{ inputs.poetry-version }}
@@ -62,7 +61,6 @@ runs:
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       shell: sh
-#      run: poetry install --no-interaction --no-root
       run: |
         action_required="${{ inputs.action-path-required }}"
         echo "Action required: $action_required"
@@ -91,7 +89,6 @@ runs:
     #----------------------------------------------
     - name: Install library
       shell: sh
-#      run: poetry install --no-interaction
       run: |
         action_required="${{ inputs.action-path-required }}"
         echo "Action required: $action_required"
