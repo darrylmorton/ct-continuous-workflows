@@ -94,8 +94,10 @@ runs:
         echo "GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH:-}"
         echo "resolved repo_path=$repo_path"
   
-        ls -la "${repo_path:-}"
         ls -la "${repo_path}"
+
+        echo "GITHUB_WORKSPACE_PATH=${GITHUB_WORKSPACE_PATH}"
+        ls -la ${GITHUB_WORKSPACE_PATH}"
         
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
