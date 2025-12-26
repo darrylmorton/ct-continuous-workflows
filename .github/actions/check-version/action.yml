@@ -59,7 +59,7 @@ runs:
       with:
         action-path-required: 'true'
 
-    - name: Set python
+    - name: Poetry setup
       uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
@@ -67,6 +67,8 @@ runs:
         lockfile-path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
         action-path-required: ${{ inputs.action-path-required }}
         repo-path: ${{ steps.get_repo_root.outputs.repo-path }}
+
+
 
     - name: Run version check script
       id: app_version_step
@@ -107,16 +109,16 @@ runs:
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
             echo "Running check in repo path: $repo_path"
-            poetry run -C "$repo_path" check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
-            app_version=$(poetry run -C "$repo_path" app_version --package-manager "${{ inputs.package-manager }}")
+            poetry run -C "$repo_path" check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+            app_version=$(poetry run -C "$repo_path" app-version --package-manager "${{ inputs.package-manager }}")
           else
             echo "error: action-path-required is 'true' but repo-path is empty" >&2
             exit 1
           fi
         else
             echo "Running check in current workspace"
-            poetry run check_version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
-            app_version=$(poetry run app_version --package-manager "${{ inputs.package-manager }}")
+            poetry run check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+            app_version=$(poetry run app-version --package-manager "${{ inputs.package-manager }}")
         fi
 
         echo "app-version=$app_version" >> "$GITHUB_OUTPUT"

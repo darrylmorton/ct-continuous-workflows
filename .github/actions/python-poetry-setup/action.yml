@@ -20,10 +20,10 @@ inputs:
     required: false
     default: ''
 
-outputs:
-  repo-path:
-    description: Repository path from action path
-    value: ${{ steps.get-repo-root.outputs.repo-path }}
+#outputs:
+#  repo-path:
+#    description: Repository path from action path
+#    value: ${{ steps.get-repo-root.outputs.repo-path }}
 
 runs:
   using: composite
@@ -34,13 +34,6 @@ runs:
     - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
-
-#    - name: Resolve repo root (if required)
-#      id: get-repo-root
-#      if: inputs.action-path-required == 'true'
-#      uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
-#      with:
-#        action-path-required: ${{ inputs.action-path-required }}
 
     - name: Load cached Poetry installation
       id: cached-poetry
