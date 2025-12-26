@@ -28,6 +28,11 @@ on:
         required: false
         default: 'healthz'
         type: string
+      db-migrate-flag:
+        description: Run DB migrations before tests
+        required: false
+        default: 'false'
+        type: string
     secrets:
       gh-token:
         description: GitHub token
@@ -66,7 +71,7 @@ jobs:
       - name: Setup dependencies
         run: docker compose -f docker-compose.yml up -d
 
-      - name: Sleep for 10s
+      - name: Sleep for '${{ inputs.sleep-time }}s'
         uses: juliangruber/sleep-action@v2.0.0
         with:
           time: ${{ inputs.sleep-time }}
@@ -77,5 +82,9 @@ jobs:
       - name: Curl Authentication Service Health Check
         run: curl http://localhost:${{ inputs.port }}/${{ inputs.healthcheck-route }}
 
+      - if: inputs.db-migrate-flag == 'true'
+        name: Initialise DB
+        run: make migrations
+
       - name: Run integration tests
-        run: make migrations && make test-integration
+        run: make test-integration

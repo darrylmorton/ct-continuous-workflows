@@ -16,8 +16,8 @@ on:
       storybook-playwright-install-flag:
         description: Install playwright for Storybook tests
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
 
 jobs:
   print-inputs:
@@ -50,7 +50,7 @@ jobs:
       - name: Lint
         uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-lint@v1
 
-      - if: ${{ inputs.storybook-playwright-install-flag == true }}
+      - if: inputs.storybook-playwright-install-flag == 'true'
         name: Install Playwright
         uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install-playwright@v1
 

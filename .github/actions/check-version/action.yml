@@ -4,10 +4,10 @@ description: Check application version against latest release
 inputs:
   poetry-version:
     description: Poetry version
-    required: false
+    required: true
   python-version:
     description: Python version
-    required: false
+    required: true
   package-manager:
     description: Package manager to use (e.g. npm, poetry)
     required: true

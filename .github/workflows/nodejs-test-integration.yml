@@ -21,8 +21,8 @@ on:
       db-migrate-flag:
         description: Run DB migrations before tests
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
 
 jobs:
   print-inputs:
@@ -59,12 +59,12 @@ jobs:
       - name: Setup dependencies
         run: docker compose up -d
 
-      - name: Sleep
+      - name: Sleep for '${{ inputs.sleep-time }}s'
         uses: kibertoad/wait-action@1.0.1
         with:
           time: ${{ inputs.sleep-time }}
 
-      - if: ${{ inputs.db-migrate-flag == true }}
+      - if: inputs.db-migrate-flag == 'true'
         name: Initialise DB
         run: npm run test:migrate
 
