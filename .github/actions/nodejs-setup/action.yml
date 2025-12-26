@@ -17,6 +17,12 @@ runs:
   steps:
     - uses: actions/checkout@v5
 
+    - name: Print inputs
+      shell: sh
+      run: |
+        echo "Input - working-directory: ${{ inputs.working-directory }}"
+        echo "Input - nodejs-version: ${{ inputs.nodejs-version }}"
+
     - uses: actions/setup-node@v4
       with:
         cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json

@@ -19,8 +19,13 @@ outputs:
 runs:
   using: composite
   steps:
-    - id: resolve
-      name: Resolve repo root
+    - name: Print inputs
+      shell: sh
+      run: |
+        echo "Input - action-path-required: ${{ inputs.action-path-required }}"
+
+    - name: Resolve repo root
+      id: resolve
       if: inputs.action-path-required == 'true'
       shell: sh
       run: |

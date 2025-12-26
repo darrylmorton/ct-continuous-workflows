@@ -25,6 +25,18 @@ on:
         type: boolean
 
 jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - nodejs-version: ${{ inputs.nodejs-version }}"
+          echo "Input - working-directory: ${{ inputs.working-directory }}"
+          echo "Input - sleep-time: ${{ inputs.sleep-time }}"
+          echo "Input - db-migrate-flag: ${{ inputs.db-migrate-flag }}"
+
   test-integration-coverage:
     name: Run integration tests with coverage
     runs-on: ubuntu-latest

@@ -26,6 +26,15 @@ runs:
   steps:
     - uses: actions/checkout@v5
 
+    - name: Print inputs
+      shell: sh
+      run: |
+        echo "Input - python-version: ${{ inputs.python-version }}"
+        echo "Input - poetry-version: ${{ inputs.poetry-version }}"
+        echo "Input - lockfile-path: ${{ inputs.lockfile-path }}"
+        echo "Input - action-path-required: ${{ inputs.action-path-required }}"
+        echo "Input - repo-path: ${{ inputs.repo-path }}"
+        
     #----------------------------------------------
     #       check-out repo and set-up python
     #----------------------------------------------

@@ -20,6 +20,17 @@ on:
         type: boolean
 
 jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - nodejs-version: ${{ inputs.nodejs-version }}"
+          echo "Input - working-directory: ${{ inputs.working-directory }}"
+          echo "Input - storybook-playwright-install-flag: ${{ inputs.storybook-playwright-install-flag }}"
+
   test-unit-coverage:
     name: Run Unit Tests with Coverage
     runs-on: ubuntu-latest

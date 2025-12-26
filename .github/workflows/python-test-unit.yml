@@ -15,6 +15,16 @@ on:
         type: string
 
 jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - python-version: ${{ inputs.python-version }}"
+          echo "Input - poetry-version: ${{ inputs.poetry-version }}"
+
   test-unit-coverage:
     name: Run Unit Tests with Coverage
     runs-on: ubuntu-latest
@@ -27,16 +37,6 @@ jobs:
         uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
         with:
           python-version: ${{ inputs.python-version }}
-          poetry-version: ${{ inputs.poetry-version }}
-
-#      - name: Install poetry
-#        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
-#        with:
-#          poetry-version: ${{ inputs.poetry-version }}
-#          python-version: ${{ inputs.python-version }}
-#
-#      - name: Install poetry dependencies
-#        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
 
       - name: Run unit tests
         run: make test-unit

@@ -11,6 +11,11 @@ runs:
   using: composite
 
   steps:
+    - name: Print inputs
+      shell: sh
+      run: |
+        echo "Input - working-directory: ${{ inputs.working-directory }}"
+
     - name: Lint
       working-directory: ${{ inputs.working-directory }}
       shell: sh

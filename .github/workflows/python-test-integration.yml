@@ -34,6 +34,19 @@ on:
         required: true
 
 jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - python-version: ${{ inputs.python-version }}"
+          echo "Input - poetry-version: ${{ inputs.poetry-version }}"
+          echo "Input - sleep-time: ${{ inputs.sleep-time }}"
+          echo "Input - port: ${{ inputs.port }}"
+          echo "Input - healthcheck-route: ${{ inputs.healthcheck-route }}"
+
   test-integration-coverage:
     name: Run Integration Tests with Coverage
     runs-on: ubuntu-latest
@@ -46,16 +59,6 @@ jobs:
         uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
         with:
           python-version: ${{ inputs.python-version }}
-          poetry-version: ${{ inputs.poetry-version }}
-
-#      - name: Install poetry
-#        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
-#        with:
-#          poetry-version: ${{ inputs.poetry-version }}
-#          python-version: ${{ inputs.python-version }}
-#
-#      - name: Install poetry dependencies
-#        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
 
       - name: Log in to registry
         run: echo "${{ secrets.gh-token }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

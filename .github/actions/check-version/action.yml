@@ -33,6 +33,14 @@ runs:
   steps:
     - uses: actions/checkout@v5
 
+    - name: Print inputs
+      shell: sh
+      run: |
+        echo "Input - poetry-version: ${{ inputs.poetry-version }}"
+        echo "Input - python-version: ${{ inputs.python-version }}"
+        echo "Input - package-manager: ${{ inputs.package-manager }}"
+        echo "Input - action-path-required: ${{ inputs.action-path-required }}"
+
     - name: Set lockfile path
       id: set_lockfile_path
       shell: sh
@@ -65,10 +73,12 @@ runs:
       id: app_version_step
       env:
         REPOSITORY: ${{ github.repository }}
+        WORKSPACE: ${{ github.workspace }}
       shell: sh
       run: |
         echo "github repository: ${{ env.REPOSITORY }}"
-        
+        echo "github workspace: ${{ env.WORKSPACE }}"
+
         latest_release_version=$(curl -s https://api.github.com/repos/${{ env.REPOSITORY }}/releases/latest | jq -r '.tag_name // empty')
         echo "Latest release: $latest_release_version"
 
@@ -77,10 +87,6 @@ runs:
           exit 1
         fi
 
-        # action_path requirement
-        # Obtain action-path-required value and repo path (may be empty). Prefer
-        # an explicit input repo-path, otherwise fall back to the repo-path
-        # exported by the python-poetry-setup step (which itself calls get-repo-root).
         action_required="${{ inputs.action-path-required }}"
         echo "Action required: $action_required"
 
@@ -92,28 +98,21 @@ runs:
         fi
 
         # Debug listings (optional) - keep minimal to assist troubleshooting
-        echo "GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH:-}"
         echo "resolved repo_path=$repo_path"
-  
-        ls -la "${repo_path}"
-
-        workspace_path="${GITHUB_WORKSPACE}"
-        echo "workspace_path=$workspace_path"
-        ls -la "$workspace_path"
         
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
             echo "Running check in repo path: $repo_path"
-            poetry run -C "$repo_path" check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version" --workspace-path "$workspace_path"
-            app_version=$(poetry run -C "$repo_path" app-version --package-manager "${{ inputs.package-manager }}" --workspace-path "$workspace_path")
+            poetry run -C "$repo_path" check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version" --workspace-path "${{ env.WORKSPACE }}"
+            app_version=$(poetry run -C "$repo_path" app-version --package-manager "${{ inputs.package-manager }}" --workspace-path "${{ env.WORKSPACE }}")
           else
             echo "error: action-path-required is 'true' but repo-path is empty" >&2
             exit 1
           fi
         else
             echo "Running check in current workspace"
-            poetry run check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version" --workspace-path "$workspace_path"
-            app_version=$(poetry run app-version --package-manager "${{ inputs.package-manager }}" --workspace-path "$workspace_path")
+            poetry run check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version" --workspace-path "${{ env.WORKSPACE }}"
+            app_version=$(poetry run app-version --package-manager "${{ inputs.package-manager }}" --workspace-path "${{ env.WORKSPACE }}")
         fi
 
         echo "app-version=$app_version" >> "$GITHUB_OUTPUT"
