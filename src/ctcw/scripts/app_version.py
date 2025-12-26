@@ -15,13 +15,14 @@ def main(arg_list: list[str] | None = None):
     parser.add_argument(
         "--workspace-path",
         required=True,
-        help="Path",
+        help="Workspace path",
     )
     args = parser.parse_args(arg_list)
 
     package_manager = AppUtil.validate_package_manager(args.package_manager)
+    workspace_path = AppUtil.validate_workspace_path(args.workspace_path)
 
-    app_version = AppUtil.get_app_version(package_manager, args.workspace_path)
+    app_version = AppUtil.get_app_version(package_manager, workspace_path)
 
     print(app_version)
 

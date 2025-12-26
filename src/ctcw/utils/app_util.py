@@ -22,6 +22,18 @@ class AppUtil:
         return package_manager
 
     @staticmethod
+    def validate_workspace_path(workspace_path: str) -> str:
+        path = Path(workspace_path)
+
+        if not path.exists() or not path.is_dir():
+            error_message = f"Workspace path '{workspace_path}' does not exist or is not a directory."
+            log.error(error_message)
+
+            raise ValueError(error_message)
+
+        return workspace_path.rstrip("/")
+
+    @staticmethod
     def get_app_version(package_manager: str, workspace_path: str) -> str:
         app_version = None
 

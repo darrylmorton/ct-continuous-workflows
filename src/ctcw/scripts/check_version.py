@@ -26,8 +26,10 @@ def main(arg_list: list[str] | None = None):
     args = parser.parse_args(arg_list)
 
     package_manager = AppUtil.validate_package_manager(args.package_manager)
-
     log.info(f"Valid Package manager {package_manager}.")
+
+    workspace_path = args.workspace_path
+    log.info(f"Valid Workspace path {workspace_path}.")
 
     try:
         Version(args.latest_release_version)
@@ -54,7 +56,7 @@ def main(arg_list: list[str] | None = None):
 
         raise ValueError(error_message)
 
-    app_version = AppUtil.get_app_version(package_manager)
+    app_version = AppUtil.get_app_version(package_manager, workspace_path)
 
     if Version(app_version) <= Version(args.latest_release_version):
         error_message = (
