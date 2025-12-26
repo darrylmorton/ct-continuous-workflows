@@ -68,6 +68,6 @@ class AppUtil:
 
             raise ValueError(error_message)
 
-        print(f"app_version {app_version}")
+        # print(f"app_version {app_version}")
 
         return app_version
