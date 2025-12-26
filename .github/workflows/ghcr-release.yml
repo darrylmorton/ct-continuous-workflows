@@ -31,22 +31,22 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  get-repo-root:
-    runs-on: ubuntu-latest
-    outputs:
-        repo-path: ${{ steps.get-repo-root.outputs.repo-path }}
-
-    steps:
-      - name: actions checkout
-        uses: actions/checkout@v4
-
-      - name: get-repo-root
-        uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
-        with:
-          action-path-required: 'true'
+#  get-repo-root:
+#    runs-on: ubuntu-latest
+#    outputs:
+#        repo-path: ${{ steps.get-repo-root.outputs.repo-path }}
+#
+#    steps:
+#      - name: actions checkout
+#        uses: actions/checkout@v4
+#
+#      - name: get-repo-root
+#        uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
+#        with:
+#          action-path-required: 'true'
 
   check-version:
-    needs: [ get-repo-root ]
+#    needs: [ get-repo-root ]
     runs-on: ubuntu-latest
     outputs:
       app-version: ${{ steps.check-version.outputs.app-version }}

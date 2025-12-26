@@ -30,6 +30,9 @@ outputs:
   lockfile-path:
     description: Path to the lockfile used
     value: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
+  repo-path:
+    description: Repository path from action path
+    value: ${{ steps.get-repo-root.outputs.repo-path }}
 
 runs:
   using: composite
@@ -49,6 +52,11 @@ runs:
           echo "Error: Unsupported package manager '${{ inputs.package-manager }}'" >&2
           exit 1
         fi
+
+    - name: Get repo root
+      uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
+      with:
+        action-path-required: 'true'
 
     - name: Set python
       id: setup-python
