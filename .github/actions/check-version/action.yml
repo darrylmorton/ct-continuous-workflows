@@ -96,8 +96,8 @@ runs:
   
         ls -la "${repo_path}"
 
-        workspace_path="${GITHUB_WORKSPACE_PATH:-}"
-        echo "GITHUB_WORKSPACE_PATH=${GITHUB_WORKSPACE_PATH:-}"
+        workspace_path="${GITHUB_WORKSPACE}"
+        echo "GITHUB_WORKSPACE_PATH=${GITHUB_WORKSPACE}"
         ls -la ${GITHUB_WORKSPACE_PATH}"
         
         echo "github_workspace=${{ github.workspace}}"
