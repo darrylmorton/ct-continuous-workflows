@@ -103,7 +103,7 @@ runs:
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
             echo "Running check in repo path: $repo_path"
-            poetry run -C "$repo_path" check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+            poetry run -C "$repo_path" check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version" --workspace-path "$workspace_path"
             app_version=$(poetry run -C "$repo_path" app-version --package-manager "${{ inputs.package-manager }}" --workspace-path "$workspace_path")
           else
             echo "error: action-path-required is 'true' but repo-path is empty" >&2
@@ -111,7 +111,7 @@ runs:
           fi
         else
             echo "Running check in current workspace"
-            poetry run check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version"
+            poetry run check-version --package-manager "${{ inputs.package-manager }}" --latest-release-version "$latest_release_version" --workspace-path "$workspace_path"
             app_version=$(poetry run app-version --package-manager "${{ inputs.package-manager }}" --workspace-path "$workspace_path")
         fi
 
