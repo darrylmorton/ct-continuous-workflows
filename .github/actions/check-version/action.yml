@@ -31,8 +31,6 @@ runs:
   using: composite
 
   steps:
-    - uses: actions/checkout@v5
-
     - name: Print inputs
       shell: sh
       run: |
@@ -40,6 +38,8 @@ runs:
         echo "Input - python-version: ${{ inputs.python-version }}"
         echo "Input - package-manager: ${{ inputs.package-manager }}"
         echo "Input - action-path-required: ${{ inputs.action-path-required }}"
+
+    - uses: actions/checkout@v5
 
     - name: Set lockfile path
       id: set_lockfile_path
