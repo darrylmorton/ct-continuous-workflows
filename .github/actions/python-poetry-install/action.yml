@@ -15,12 +15,6 @@ runs:
   steps:
     - uses: actions/checkout@v5
 
-    - name: Print inputs
-      shell: sh
-      run: |
-        echo "Input - poetry-version: ${{ inputs.poetry-version }}"
-        echo "Input - python-version: ${{ inputs.python-version }}"
-
     - uses: snok/install-poetry@v1
       with:
         version: ${{ inputs.poetry-version }}

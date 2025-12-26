@@ -31,14 +31,6 @@ runs:
   using: composite
 
   steps:
-    - name: Print inputs
-      shell: sh
-      run: |
-        echo "Input - poetry-version: ${{ inputs.poetry-version }}"
-        echo "Input - python-version: ${{ inputs.python-version }}"
-        echo "Input - package-manager: ${{ inputs.package-manager }}"
-        echo "Input - action-path-required: ${{ inputs.action-path-required }}"
-
     - uses: actions/checkout@v5
 
     - name: Set lockfile path

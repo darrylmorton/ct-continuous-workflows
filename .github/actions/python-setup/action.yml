@@ -12,11 +12,6 @@ runs:
   steps:
     - uses: actions/checkout@v5
 
-    - name: Print inputs
-      shell: sh
-      run: |
-        echo "Input - python-version: ${{ inputs.python-version }}"
-
     - name: Setup Python
       id: setup-python
       uses: actions/setup-python@v6
