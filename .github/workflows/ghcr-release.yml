@@ -64,7 +64,7 @@ jobs:
           repository: ${{ inputs.repository }}
           package-manager: ${{ inputs.package-manager }}
           action-path-required: 'true'
-          repo-path: ${{ needs.get-repo-root.outputs.repo-path }}
+#          repo-path: ${{ needs.get-repo-root.outputs.repo-path }}
 
   create-tag:
     runs-on: ubuntu-latest

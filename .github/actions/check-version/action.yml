@@ -14,10 +14,10 @@ inputs:
   package-manager:
     description: Package manager to use (e.g. npm, poetry)
     required: true
-  repo-path:
-    description: Path to the repository root
-    required: false
-    default: ''
+#  repo-path:
+#    description: Path to the repository root
+#    required: false
+#    default: ''
   action-path-required:
     description: Whether to require resolving the action path (used to run commands in repo root)
     required: false
@@ -54,19 +54,19 @@ runs:
         fi
 
     - name: Get repo root
+      id: get_repo_root
       uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
       with:
         action-path-required: 'true'
 
     - name: Set python
-      id: setup-python
       uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
         poetry-version: ${{ inputs.poetry-version }}
         lockfile-path: ${{ steps.set_lockfile_path.outputs.lockfile-path }}
         action-path-required: ${{ inputs.action-path-required }}
-        repo-path: ${{ inputs.repo-path }}
+        repo-path: ${{ steps.get_repo_root.outputs.repo-path }}
 
     - name: Run version check script
       id: app_version_step
@@ -87,11 +87,11 @@ runs:
         action_required="${{ inputs.action-path-required }}"
         echo "Action required: $action_required"
 
-        repo_path="${{ inputs.repo-path }}"
+        repo_path="${{ steps.get_repo_root.outputs.repo-path }}"
         echo "Repo path: $repo_path"
 
         if [ -z "$repo_path" ]; then
-          repo_path="${{ inputs.repo-path }}"
+          repo_path="${{ steps.get_repo_root.outputs.repo-path }}"
         fi
 
         # Debug listings (optional) - keep minimal to assist troubleshooting
