@@ -51,6 +51,7 @@ jobs:
           echo "Input - sleep-time: ${{ inputs.sleep-time }}"
           echo "Input - port: ${{ inputs.port }}"
           echo "Input - healthcheck-route: ${{ inputs.healthcheck-route }}"
+          echo "Input - db-migrate-flag: ${{ inputs.db-migrate-flag }}"
 
   test-integration-coverage:
     name: Run Integration Tests with Coverage
