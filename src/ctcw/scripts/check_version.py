@@ -23,12 +23,17 @@ def main(arg_list: list[str] | None = None):
         required=True,
         help="Latest Release version to check",
     )
+    parser.add_argument(
+        "--workspace-path",
+        required=True,
+        help="Workspace path",
+    )
     args = parser.parse_args(arg_list)
 
     package_manager = AppUtil.validate_package_manager(args.package_manager)
     log.info(f"Valid Package manager {package_manager}.")
 
-    workspace_path = args.workspace_path
+    workspace_path = AppUtil.validate_workspace_path(args.workspace_path)
     log.info(f"Valid Workspace path {workspace_path}.")
 
     try:
