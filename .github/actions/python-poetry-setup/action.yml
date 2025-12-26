@@ -26,19 +26,18 @@ runs:
   steps:
     - uses: actions/checkout@v5
 
+    #----------------------------------------------
+    #       check-out repo and set-up python
+    #----------------------------------------------
     - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
       with:
         python-version: ${{ inputs.python-version }}
 
-    - name: Load cached Poetry installation
-      id: cached-poetry
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache
-        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles(inputs.lockfile-path) }}
-
+    #----------------------------------------------
+    #  -----  install & configure poetry  -----
+    #----------------------------------------------
     - name: Install Poetry
-      if: steps.cached-poetry.outputs.cache-hit != 'true'
+#      if: steps.cached-poetry.outputs.cache-hit != 'true'
       uses: snok/install-poetry@v1
       with:
         version: ${{ inputs.poetry-version }}
@@ -47,14 +46,23 @@ runs:
         virtualenvs-path: .venv
         installer-parallel: true
 
-    - name: Configure poetry
-      if: steps.cached-poetry.outputs.cache-hit == 'true'
-      shell: sh
-      run: poetry config virtualenvs.in-project true
+    #----------------------------------------------
+    #       load cached venv if cache exists
+    #----------------------------------------------
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache
+        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles(inputs.lockfile-path) }}
 
-    - name: Install Dependencies
-      if: steps.cached-poetry.outputs.cache-hit != 'true'
+    #----------------------------------------------
+    # install dependencies if cache does not exist
+    #----------------------------------------------
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       shell: sh
+#      run: poetry install --no-interaction --no-root
       run: |
         action_required="${{ inputs.action-path-required }}"
         echo "Action required: $action_required"
@@ -78,8 +86,12 @@ runs:
           poetry install --no-interaction --no-root
         fi
 
-    - name: Install Project
+    #----------------------------------------------
+    # install your root project, if required
+    #----------------------------------------------
+    - name: Install library
       shell: sh
+#      run: poetry install --no-interaction
       run: |
         action_required="${{ inputs.action-path-required }}"
         echo "Action required: $action_required"
