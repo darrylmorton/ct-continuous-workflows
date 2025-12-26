@@ -103,9 +103,6 @@ runs:
         ls -la "${repo_path:-}"
         ls -la "${repo_path}"
         
-        echo "GITHUB_WORKSPACE_PATH_EXAMPLE=${GITHUB_WORKSPACE:-}"
-        ls -la "${GITHUB_WORKSPACE_PATH_EXAMPLE:-}"
-        
         if [ "$action_required" = 'true' ]; then
           if [ -n "$repo_path" ]; then
             echo "Running check in repo path: $repo_path"
