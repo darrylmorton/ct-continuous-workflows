@@ -38,7 +38,7 @@ jobs:
           echo "Input - db-migrate-flag: ${{ inputs.db-migrate-flag }}"
 
   test-integration-coverage:
-    name: Run integration tests with coverage
+    needs: [ print-inputs ]
     runs-on: ubuntu-latest
 
     steps:

@@ -32,7 +32,7 @@ jobs:
           echo "Input - storybook-playwright-install-flag: ${{ inputs.storybook-playwright-install-flag }}"
 
   test-unit-coverage:
-    name: Run Unit Tests with Coverage
+    needs: [ print-inputs ]
     runs-on: ubuntu-latest
 
     steps:

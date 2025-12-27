@@ -40,6 +40,7 @@ jobs:
           echo "Input - package-manager: ${{ inputs.package-manager }}"
 
   check-version:
+    needs: [ print-inputs ]
     runs-on: ubuntu-latest
     outputs:
       app-version: ${{ steps.check-version.outputs.app-version }}
