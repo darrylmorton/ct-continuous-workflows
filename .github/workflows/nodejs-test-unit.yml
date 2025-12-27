@@ -16,20 +16,31 @@ on:
       storybook-playwright-install-flag:
         description: Install playwright for Storybook tests
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
 
 jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - nodejs-version: ${{ inputs.nodejs-version }}"
+          echo "Input - working-directory: ${{ inputs.working-directory }}"
+          echo "Input - storybook-playwright-install-flag: ${{ inputs.storybook-playwright-install-flag }}"
+
   test-unit-coverage:
-    name: Run Unit Tests with Coverage
+    needs: [ print-inputs ]
     runs-on: ubuntu-latest
 
     steps:
       - name: actions checkout
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install@v1
+      - name: Setup Node.js
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-setup@v1
         with:
           nodejs-version: ${{ inputs.nodejs-version }}
 
@@ -39,7 +50,7 @@ jobs:
       - name: Lint
         uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-lint@v1
 
-      - if: ${{ inputs.storybook-playwright-install-flag == true }}
+      - if: inputs.storybook-playwright-install-flag == 'true'
         name: Install Playwright
         uses: darrylmorton/ct-continuous-workflows/.github/actions/nodejs-install-playwright@v1
 

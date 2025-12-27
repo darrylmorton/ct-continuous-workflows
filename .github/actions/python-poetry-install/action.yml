@@ -1,0 +1,21 @@
+name: Poetry Install
+description: Install
+
+inputs:
+  poetry-version:
+    description: Poetry version
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - uses: actions/checkout@v5
+
+    - uses: snok/install-poetry@v1
+      with:
+        version: ${{ inputs.poetry-version }}
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        virtualenvs-path: .venv
+        installer-parallel: true

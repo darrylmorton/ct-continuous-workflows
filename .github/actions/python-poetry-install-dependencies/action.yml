@@ -1,0 +1,88 @@
+name: Poetry Install Dependencies
+description: Install Dependencies
+
+inputs:
+  python-version:
+    description: Python version
+    required: true
+  lockfile-path:
+    description: Path to the poetry lockfile
+    required: true
+  action-path-required:
+    description: Action path required
+    required: true
+  repo-path:
+    description: Path to the repository root
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - uses: actions/checkout@v5
+
+    #----------------------------------------------
+    #       load cached venv if cache exists
+    #----------------------------------------------
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache
+        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles(inputs.lockfile-path) }}
+
+    #----------------------------------------------
+    # install dependencies if cache does not exist
+    #----------------------------------------------
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      shell: sh
+      run: |
+        action_required="${{ inputs.action-path-required }}"
+        echo "Action required: $action_required"
+
+        # Prefer explicit input (caller-provided) and fall back to resolved path
+        repo_path="${{ inputs.repo-path }}"
+        echo "Repo path: $repo_path"
+
+        if [ -z "$repo_path" ]; then
+          repo_path="${{ inputs.repo-path }}"
+        fi
+        
+        if [ "$action_required" = 'true' ]; then
+          if [ -n "$repo_path" ]; then
+            poetry install -C "$repo_path" --no-interaction --no-root
+          else
+            echo "error: action-path-required is 'true' but repo-path is empty" >&2
+            exit 1
+          fi
+        else
+          poetry install --no-interaction --no-root
+        fi
+
+    #----------------------------------------------
+    # install your root project, if required
+    #----------------------------------------------
+    - name: Install library
+      shell: sh
+      run: |
+        action_required="${{ inputs.action-path-required }}"
+        echo "Action required: $action_required"
+        
+        repo_path="${{ inputs.repo-path }}"
+        echo "Repo path: $repo_path"
+
+        if [ -z "$repo_path" ]; then
+          repo_path="${{ inputs.repo-path }}"
+        fi
+        
+        if [ "$action_required" = 'true' ]; then
+          if [ -n "$repo_path" ]; then
+            poetry install -C "$repo_path" --no-interaction
+          else
+            echo "error: action-path-required is 'true' but repo-path is empty" >&2
+            exit 1
+          fi
+        else
+          poetry install --no-interaction
+        fi

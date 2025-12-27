@@ -1,0 +1,47 @@
+name: Python - Test Unit
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: Python version
+        required: false
+        default: '3.11.9'
+        type: string
+      poetry-version:
+        description: Poetry version
+        required: false
+        default: '1.7.1'
+        type: string
+
+env:
+  ENVIRONMENT: test
+
+jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - python-version: ${{ inputs.python-version }}"
+          echo "Input - poetry-version: ${{ inputs.poetry-version }}"
+
+  test-unit-coverage:
+    needs: [ print-inputs ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: actions checkout
+        uses: actions/checkout@v4
+
+      - name: Setup python and poetry
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
+        with:
+          python-version: ${{ inputs.python-version }}
+          poetry-version: ${{ inputs.poetry-version }}
+          lockfile-path: '**/poetry.lock'
+
+      - name: Run unit tests
+        run: make test-unit

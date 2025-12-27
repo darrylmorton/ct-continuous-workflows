@@ -1,0 +1,96 @@
+name: Python - Test Integration
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: Python version
+        required: false
+        default: '3.11.9'
+        type: string
+      poetry-version:
+        description: Poetry version
+        required: false
+        default: '1.7.1'
+        type: string
+      sleep-time:
+        description: Sleep time in seconds
+        required: false
+        default: '5s'
+        type: string
+      port:
+        description: Port
+        required: false
+        default: '8001'
+        type: string
+      healthcheck-route:
+        description: Healthcheck route
+        required: false
+        default: 'healthz'
+        type: string
+      db-migrate-flag:
+        description: Run DB migrations before tests
+        required: false
+        default: 'false'
+        type: string
+    secrets:
+      gh-token:
+        description: GitHub token
+        required: true
+
+env:
+  ENVIRONMENT: test
+
+jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - python-version: ${{ inputs.python-version }}"
+          echo "Input - poetry-version: ${{ inputs.poetry-version }}"
+          echo "Input - sleep-time: ${{ inputs.sleep-time }}"
+          echo "Input - port: ${{ inputs.port }}"
+          echo "Input - healthcheck-route: ${{ inputs.healthcheck-route }}"
+          echo "Input - db-migrate-flag: ${{ inputs.db-migrate-flag }}"
+
+  test-integration-coverage:
+    needs: [ print-inputs ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: actions checkout
+        uses: actions/checkout@v4
+
+      - name: Setup python and poetry
+        uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
+        with:
+          python-version: ${{ inputs.python-version }}
+          poetry-version: ${{ inputs.poetry-version }}
+          lockfile-path: '**/poetry.lock'
+
+      - name: Log in to registry
+        run: echo "${{ secrets.gh-token }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Setup dependencies
+        run: docker compose -f docker-compose.yml up -d
+
+      - name: Sleep for '${{ inputs.sleep-time }}'
+        uses: juliangruber/sleep-action@v2.0.0
+        with:
+          time: ${{ inputs.sleep-time }}
+
+      - name: Docker running containers
+        run: docker ps -a
+
+      - name: Curl Authentication Service Health Check
+        run: curl http://localhost:${{ inputs.port }}/${{ inputs.healthcheck-route }}
+
+      - if: inputs.db-migrate-flag == 'true'
+        name: Initialise DB
+        run: make migrations
+
+      - name: Run integration tests
+        run: make test-integration

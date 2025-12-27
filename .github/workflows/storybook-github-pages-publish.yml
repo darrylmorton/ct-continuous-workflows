@@ -22,7 +22,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print inputs
+        shell: sh
+        run: |
+          echo "Input - nodejs-version: ${{ inputs.nodejs-version }}"
+
   deploy:
+    needs: [ print-inputs ]
     runs-on: ubuntu-latest
     environment:
       name: github-pages

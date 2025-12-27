@@ -11,16 +11,21 @@ Checklist of what this README covers
 
 Available reusable items (examples in this repo)
 - Actions (directories under `.github/actions/`):
-  - nodejs-install
-  - nodejs-install-dependencies
-  - nodejs-lint
-  - nodejs-install-playwright
+  - check-version
   - nodejs-build
+  - nodejs-install-dependencies
+  - nodejs-install-playwright
+  - nodejs-lint
   - nodejs-setup
-
+  - python-poetry-setup
+  - python-setup
+  
 - Workflows (files under `.github/workflows/`):
-  - nodejs-test-unit.yml
+  - ghcr-release.yml
   - nodejs-test-integration.yml
+  - nodejs-test-unit.yml
+  - python-test-integration.yml
+  - python-test-unit.yml
   - storybook-github-pages-publish.yml
 
 Tagging and versioning — the idea
@@ -29,14 +34,20 @@ Tagging and versioning — the idea
 
 Tags created in this repository
 - Per-action/workflow tags (one tag per reusable item):
-  - nodejs-install/v1
-  - nodejs-install-dependencies/v1
-  - nodejs-lint/v1
-  - nodejs-install-playwright/v1
+  - check-version/v1
+  - get-repo-root/v1
+  - ghcr-release/v1
   - nodejs-build/v1
+  - nodejs-install-dependencies/v1
+  - nodejs-install-playwright/v1
+  - nodejs-lint/v1
   - nodejs-setup/v1
-  - nodejs-test-unit/v1
   - nodejs-test-integration/v1
+  - nodejs-test-unit/v1
+  - python-poetry-setup/v1
+  - python-setup/v1
+  - python-test-integration/v1
+  - python-test-unit/v1
   - storybook-github-pages-publish/v1
 
 - Repository-level convenience tag:
@@ -47,39 +58,59 @@ Commands I ran to create and push these tags (exact commands executed)
 
 ```bash
 # Commands executed for each tag (created annotated tag at HEAD and pushed)
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-install/v1 -m "Release nodejs-install/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-install/v1 --force
+git -C tag -f -a check-version/v1 -m "Release check-version/v1"
+git -C push origin check-version/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-install-dependencies/v1 -m "Release nodejs-install-dependencies/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-install-dependencies/v1 --force
+git -C tag -f -a get-repo-root/v1 -m "Release get-repo-root/v1"
+git -C push origin get-repo-root/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-lint/v1 -m "Release nodejs-lint/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-lint/v1 --force
+git -C tag -f -a ghcr-release/v1 -m "Release ghcr-release/v1"
+git -C push origin ghcr-release/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-install-playwright/v1 -m "Release nodejs-install-playwright/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-install-playwright/v1 --force
+git -C tag -f -a nodejs-build/v1 -m "Release nodejs-build/v1"
+git -C push origin nodejs-build/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-build/v1 -m "Release nodejs-build/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-build/v1 --force
+git -C tag -f -a nodejs-install-dependencies/v1 -m "Release nodejs-install-dependencies/v1"
+git -C push origin nodejs-install-dependencies/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-setup/v1 -m "Release nodejs-setup/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-setup/v1 --force
+git -C tag -f -a nodejs-install-playwright/v1 -m "Release nodejs-install-playwright/v1"
+git -C push origin nodejs-install-playwright/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-test-unit/v1 -m "Release nodejs-test-unit/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-test-unit/v1 --force
+git -C tag -f -a nodejs-lint/v1 -m "Release nodejs-lint/v1"
+git -C push origin nodejs-lint/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a nodejs-test-integration/v1 -m "Release nodejs-test-integration/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin nodejs-test-integration/v1 --force
+git -C tag -f -a nodejs-setup/v1 -m "Release nodejs-setup/v1"
+git -C push origin nodejs-setup/v1 --force
 
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows tag -f -a storybook-github-pages-publish/v1 -m "Release storybook-github-pages-publish/v1"
-git -C /Users/mortond/Projects/creatively_technical/ct-continuous-workflows push origin storybook-github-pages-publish/v1 --force
+git -C tag -f -a nodejs-test-integration/v1 -m "Release nodejs-test-integration/v1"
+git -C push origin nodejs-test-integration/v1 --force
+
+git -C tag -f -a nodejs-test-unit/v1 -m "Release nodejs-test-unit/v1"
+git -C push origin nodejs-test-unit/v1 --force
+
+git -C tag -f -a python-lint/v1 -m "Release python-lint/v1"
+git -C push origin python-lint/v1 --force
+
+git -C tag -f -a python-poetry-setup/v1 -m "Release python-poetry-setup/v1"
+git -C push origin python-poetry-setup/v1 --force
+
+git -C tag -f -a python-setup/v1 -m "Release python-setup/v1"
+git -C push origin python-setup/v1 --force
+
+git -C tag -f -a python-test-integration/v1 -m "Release python-test-integration/v1"
+git -C push origin python-test-integration/v1 --force
+
+git -C tag -f -a python-test-unit/v1 -m "Release python-test-unit/v1"
+git -C push origin python-test-unit/v1 --force
+
+git -C tag -f -a storybook-github-pages-publish/v1 -m "Release storybook-github-pages-publish/v1"
+git -C push origin storybook-github-pages-publish/v1 --force
 ```
 
 - The loop command used to create & push multiple tags in one go (this was executed from the repo root):
 
 ```bash
-cd /Users/mortond/Projects/creatively_technical/ct-continuous-workflows && \
-for tag in nodejs-install/v1 nodejs-install-dependencies/v1 nodejs-lint/v1 nodejs-install-playwright/v1 nodejs-build/v1 nodejs-setup/v1 nodejs-test-unit/v1 nodejs-test-integration/v1 storybook-github-pages-publish/v1; do 
+for tag in check-version/v1 get-repo-root/v1 ghcr-release/v1 nodejs-build/v1 nodejs-install-dependencies/v1 nodejs-install-playwright/v1 nodejs-lint/v1 nodejs-setup/v1 nodejs-test-integration/v1 nodejs-test-unit/v1 python-lint/v1 python-poetry-setup/v1 python-setup/v1 python-test-integration/v1 python-test-unit/v1 storybook-github-pages-publish/v1; do 
   git tag -f -a "$tag" -m "Release $tag" && git push origin "$tag" --force;
 done
 ```
@@ -87,7 +118,6 @@ done
 - The convenience single `v1` tag was created and pushed with:
 
 ```bash
-cd /Users/mortond/Projects/creatively_technical/ct-continuous-workflows
 git tag -f -a v1 -m "v1 tag (created for caller reference)"
 git push origin v1 --force
 ```

@@ -1,0 +1,53 @@
+name: Python - Setup
+description: Setup
+
+inputs:
+  python-version:
+    description: Python version
+    required: true
+  poetry-version:
+    description: Poetry version
+    required: true
+  lockfile-path:
+    description: Path to the poetry lockfile
+    required: true
+  action-path-required:
+    description: Action path required
+    required: false
+    default: 'false'
+  repo-path:
+    description: Path to the repository root
+    required: false
+    default: ''
+
+runs:
+  using: composite
+
+  steps:
+    - uses: actions/checkout@v5
+
+    #----------------------------------------------
+    #       check-out repo and set-up python
+    #----------------------------------------------
+    - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-setup@v1
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    #----------------------------------------------
+    #  -----  install & configure poetry  -----
+    #----------------------------------------------
+    - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
+      with:
+        poetry-version: ${{ inputs.poetry-version }}
+
+    #----------------------------------------------
+    # load cached venv if cache exists
+    # install dependencies if cache does not exist
+    # install your root project, if required
+    #----------------------------------------------
+    - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
+      with:
+        python-version: ${{ inputs.python-version }}
+        lockfile-path: ${{ inputs.lockfile-path }}
+        action-path-required: ${{ inputs.action-path-required }}
+        repo-path: ${{ inputs.repo-path }}

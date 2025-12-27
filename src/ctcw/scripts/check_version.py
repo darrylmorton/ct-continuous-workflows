@@ -1,0 +1,82 @@
+import argparse
+from re import match
+
+from packaging.version import Version, InvalidVersion
+
+from ctcw.utils.app_util import AppUtil
+from logger import log
+
+
+def main(arg_list: list[str] | None = None):
+    log.info(f"main called with args: {arg_list}")
+
+    parser = argparse.ArgumentParser(
+        description="Check Application version is greater than the Release version."
+    )
+    parser.add_argument(
+        "--package-manager",
+        required=True,
+        help="Package manager selected",
+    )
+    parser.add_argument(
+        "--latest-release-version",
+        required=True,
+        help="Latest Release version to check",
+    )
+    parser.add_argument(
+        "--workspace-path",
+        required=True,
+        help="Workspace path",
+    )
+    args = parser.parse_args(arg_list)
+
+    package_manager = AppUtil.validate_package_manager(args.package_manager)
+    log.info(f"Valid Package manager {package_manager}.")
+
+    workspace_path = AppUtil.validate_workspace_path(args.workspace_path)
+    log.info(f"Valid Workspace path {workspace_path}.")
+
+    try:
+        Version(args.latest_release_version)
+    except InvalidVersion as error:
+        error_message = (
+            f"Invalid Release version {args.latest_release_version} does not match "
+            f"semver format: {error}"
+        )
+        log.error(error_message)
+
+        raise InvalidVersion(error_message)
+
+    if not args.latest_release_version:
+        error_message = f"Invalid Release version {args.latest_release_version}"
+        log.error(error_message)
+
+        raise ValueError(error_message)
+    if not match(r"^[0-9]+\.[0-9]+\.[0-9]+$", f"{args.latest_release_version}"):
+        error_message = (
+            f"Invalid Release version {args.latest_release_version} does not match "
+            f"semver format"
+        )
+        log.error(error_message)
+
+        raise ValueError(error_message)
+
+    app_version = AppUtil.get_app_version(package_manager, workspace_path)
+
+    if Version(app_version) <= Version(args.latest_release_version):
+        error_message = (
+            f"Invalid App version {app_version} is less than or equal "
+            f"to the Release version {args.latest_release_version}"
+        )
+        log.error(error_message)
+
+        raise ValueError(error_message)
+
+    log.info(
+        f"Valid Application version bump to {app_version} (greater than the "
+        f"latest Release version {args.latest_release_version})."
+    )
+
+
+if __name__ == "__main__":
+    main()

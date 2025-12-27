@@ -1,0 +1,79 @@
+name: Get Action Repo Root
+
+description: |
+  Resolve the repository root path for the repository that contains this action.
+  Outputs `repo-path` (empty string if not resolvable). Useful for other composite
+  actions or steps that need to run commands (e.g., `poetry install -C <repo-path>`).
+
+inputs:
+  action-path-required:
+    description: "If 'true', run resolution step. If 'false', outputs will be empty string."
+    required: true
+    default: 'false'
+
+outputs:
+  repo-path:
+    description: "Resolved repository root path (empty string if not resolvable)"
+    value: ${{ steps.resolve.outputs.repo-path }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Resolve repo root
+      id: resolve
+      if: inputs.action-path-required == 'true'
+      shell: sh
+      run: |
+        # Determine action path using (in order): GITHUB_ACTION_PATH env var,
+        # github.action_path context, and finally fallback to GITHUB_WORKSPACE.
+        # The last fallback is important for in-repo actions where the runner
+        # doesn't set GITHUB_ACTION_PATH but the workspace points at the repo root.
+        action_path="${GITHUB_ACTION_PATH:-${{ github.action_path }}}"
+        echo "Determined action path: $action_path"
+        echo "GitHub workspace: $GITHUB_WORKSPACE"
+        
+        # If action_path is empty but GITHUB_WORKSPACE exists, assume this is an in-repo action
+        # and use the workspace as the repo root.
+        if [ -z "$action_path" ] && [ -n "$GITHUB_WORKSPACE" ]; then
+          repo_path="$GITHUB_WORKSPACE"
+          echo "repo-path=$repo_path" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        if [ -z "$action_path" ]; then
+          # no action path available -> emit empty repo-path
+          echo "repo-path=" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        # If the action lives inside a repository in an in-repo .github/actions/... path,
+        # strip that suffix to get the repo root. Otherwise, step up a few levels as a fallback.
+        case "$action_path" in
+          */.github/actions/*)
+            repo_path="${action_path%%/.github/actions/*}"
+            ;;
+          *)
+            # step up three levels from action path (common layout)
+            if command -v realpath >/dev/null 2>&1; then
+              repo_path="$(realpath "$action_path/../../..")"
+            else
+              # fallback to naive resolution
+              repo_path="$(cd "$action_path/../../.." && pwd)"
+            fi
+            ;;
+        esac
+
+        # Normalize empty result to empty string
+        if [ -z "$repo_path" ] || [ "$repo_path" = "/" ]; then
+          echo "repo-path=" >> "$GITHUB_OUTPUT"
+        else
+          echo "repo-path=$repo_path" >> "$GITHUB_OUTPUT"
+        fi
+
+    - id: resolve-noop
+      name: No-op resolve (disabled)
+      if: inputs.action-path-required != 'true'
+      shell: sh
+      run: |
+        echo "repo-path=" >> "$GITHUB_OUTPUT"
