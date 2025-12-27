@@ -59,7 +59,7 @@ jobs:
       - name: Setup dependencies
         run: docker compose up -d
 
-      - name: Sleep for '${{ inputs.sleep-time }}s'
+      - name: Sleep for '${{ inputs.sleep-time }}'
         uses: kibertoad/wait-action@1.0.1
         with:
           time: ${{ inputs.sleep-time }}
