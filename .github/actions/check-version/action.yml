@@ -50,7 +50,7 @@ runs:
       id: get_repo_root
       uses: darrylmorton/ct-continuous-workflows/.github/actions/get-repo-root@v1
       with:
-        action-path-required: 'true'
+        action-path-required: ${{ inputs.action-path-required }}
 
     - name: Poetry setup
       uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-setup@v1
