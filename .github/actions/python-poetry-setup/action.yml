@@ -36,77 +36,18 @@ runs:
     #----------------------------------------------
     #  -----  install & configure poetry  -----
     #----------------------------------------------
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
+    - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install@v1
       with:
-        version: ${{ inputs.poetry-version }}
-        virtualenvs-create: true
-        virtualenvs-in-project: true
-        virtualenvs-path: .venv
-        installer-parallel: true
+        poetry-version: ${{ inputs.poetry-version }}
 
     #----------------------------------------------
-    #       load cached venv if cache exists
-    #----------------------------------------------
-    - name: Load cached venv
-      id: cached-poetry-dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache
-        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles(inputs.lockfile-path) }}
-
-    #----------------------------------------------
+    # load cached venv if cache exists
     # install dependencies if cache does not exist
-    #----------------------------------------------
-    - name: Install dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      shell: sh
-      run: |
-        action_required="${{ inputs.action-path-required }}"
-        echo "Action required: $action_required"
-
-        # Prefer explicit input (caller-provided) and fall back to resolved path
-        repo_path="${{ inputs.repo-path }}"
-        echo "Repo path: $repo_path"
-
-        if [ -z "$repo_path" ]; then
-          repo_path="${{ inputs.repo-path }}"
-        fi
-        
-        if [ "$action_required" = 'true' ]; then
-          if [ -n "$repo_path" ]; then
-            poetry install -C "$repo_path" --no-interaction --no-root
-          else
-            echo "error: action-path-required is 'true' but repo-path is empty" >&2
-            exit 1
-          fi
-        else
-          poetry install --no-interaction --no-root
-        fi
-
-    #----------------------------------------------
     # install your root project, if required
     #----------------------------------------------
-    - name: Install library
-      shell: sh
-      run: |
-        action_required="${{ inputs.action-path-required }}"
-        echo "Action required: $action_required"
-        
-        repo_path="${{ inputs.repo-path }}"
-        echo "Repo path: $repo_path"
-
-        if [ -z "$repo_path" ]; then
-          repo_path="${{ inputs.repo-path }}"
-        fi
-        
-        if [ "$action_required" = 'true' ]; then
-          if [ -n "$repo_path" ]; then
-            poetry install -C "$repo_path" --no-interaction
-          else
-            echo "error: action-path-required is 'true' but repo-path is empty" >&2
-            exit 1
-          fi
-        else
-          poetry install --no-interaction
-        fi
+    - uses: darrylmorton/ct-continuous-workflows/.github/actions/python-poetry-install-dependencies@v1
+      with:
+        python-version: ${{ inputs.python-version }}
+        lockfile-path: ${{ inputs.lockfile-path }}
+        action-path-required: ${{ inputs.action-path-required }}
+        repo-path: ${{ inputs.repo-path }}

@@ -5,9 +5,6 @@ inputs:
   poetry-version:
     description: Poetry version
     required: true
-  python-version:
-    description: Python version
-    required: true
 
 runs:
   using: composite
@@ -22,10 +19,3 @@ runs:
         virtualenvs-in-project: true
         virtualenvs-path: .venv
         installer-parallel: true
-
-    - name: Generate Cache Key
-      id: cached_poetry_dependencies_step
-      shell: sh
-      run: |
-        poetry_cache_key="venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('poetry.lock') }}"
-        echo "poetry_cache_key=$poetry_cache_key" >> "$GITHUB_OUTPUT"
